@@ -1,0 +1,187 @@
+{
+  "app": {
+    "title": "Lista Zadań",
+    "search_placeholder": "Szukaj...",
+    "new_list": "Nowa Lista",
+    "edit_project": "Edytuj Projekt",
+    "new_project": "Nowy Projekt",
+    "project_name": "Nazwa Projektu",
+    "edit": "Edytuj",
+    "delete": "Usuń",
+    "save": "Zapisz",
+    "cancel": "Anuluj",
+    "confirm_delete_project": "Czy na pewno chcesz usunąć ten projekt i wszystkie jego zadania?"
+  },
+  "sidebar": {
+    "inbox": "Skrzynka",
+    "today": "Dzisiaj",
+    "upcoming": "Nadchodzące",
+    "anytime": "W każdej chwili",
+    "someday": "Kiedyś",
+    "logbook": "Dziennik",
+    "projects": "PROJEKTY"
+  },
+  "tasks": {
+    "add_task": "Dodaj Zadanie",
+    "no_tasks": "Brak zadań. Ciesz się dniem!",
+    "all_done": "Wszystko zrobione!",
+    "empty": {
+      "inbox": "Twoja skrzynka jest pusta! 🎉",
+      "today": "Brak zadań na dzisiaj. Ciesz się dniem!",
+      "upcoming": "Brak nadchodzących zadań.",
+      "logbook": "Brak ukończonych zadań. Zacznij działać!",
+      "default": "Nie znaleziono zadań."
+    },
+    "confirm_delete_task": "Czy na pewno chcesz usunąć to zadanie?",
+    "clear_history": "Wyczyść Historię",
+    "confirm_clear_history": "Czy na pewno chcesz usunąć wszystkie ukończone zadania?"
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "description": "Zarządzaj swoimi preferencjami.",
+    "tabs": {
+      "general": "Ogólne",
+      "appearance": "Wygląd",
+      "api": "API"
+    },
+    "api": {
+        "description": "Generuj tokeny API dla zewnętrznego dostępu.",
+        "generate": "Generuj Token",
+        "token_name": "Nazwa Tokenu",
+        "generated_title": "Token Wygenerowany",
+        "generated_desc": "Skopiuj token teraz. Nie zobaczysz go ponownie.",
+        "no_tokens": "Brak aktywnych tokenów.",
+        "revoke": "Unieważnij",
+        "confirm_revoke": "Czy na pewno chcesz unieważnić ten token?",
+        "active_tokens": "Aktywne Tokeny",
+        "created_at": "Utworzono:"
+    },
+    "language": "Język",
+    "confirm_deletions": "Potwierdzaj usuwanie",
+    "theme": "Motyw",
+    "themes": {
+      "light": "Jasny",
+      "dark": "Ciemny",
+      "system": "Systemowy"
+    },
+    "accent_color": "Kolor Wiodący",
+    "shortcuts_scheme": "Układ Skrótów",
+    "default_due_date": "Domyślny termin",
+    "due_dates": {
+        "none": "Brak (Skrzynka)",
+        "today": "Dzisiaj"
+    },
+    "layout_density": "Gęstość układu",
+    "densities": {
+      "compact": "Kompaktowy",
+      "comfortable": "Wygodny",
+      "spacious": "Luźny"
+    },
+    "done": "Gotowe"
+  },
+  "help": {
+    "title": "Pomoc i Skróty",
+    "tabs": {
+      "shortcuts": "Skróty",
+      "quick_add": "Szybkie Dodawanie",
+      "features": "Funkcje"
+    },
+    "shortcuts": {
+        "general": "Ogólne",
+        "navigation": "Nawigacja",
+        "task_actions": "Akcje Zadań",
+        "add_new_task": "Dodaj nowe zadanie",
+        "search": "Szukaj",
+        "focus_search": "Aktywuj szukanie",
+        "close_dialog": "Zamknij okno",
+        "go_to_inbox": "Idź do Skrzynki",
+        "go_to_today": "Idź do Dzisiaj",
+        "go_to_upcoming": "Idź do Nadchodzących",
+        "go_to_logbook": "Idź do Dziennika",
+        "edit_task": "Edytuj zadanie",
+        "delete_task": "Usuń zadanie",
+        "toggle_complete": "Oznacz jako wykonane",
+        "schedule_task": "Zaplanuj zadanie"
+    },
+    "quick_add": {
+        "title": "Wprowadzanie Naturalne",
+        "description": "Pisz naturalnie, a my rozpoznamy daty, projekty i priorytety"
+    },
+    "features": {
+        "subtasks": {
+            "title": "Podzadania i Sekcje",
+            "desc": "Rozbijaj złożone zadania na mniejsze kroki."
+        },
+        "recurring": {
+            "title": "Zadania Cykliczne",
+            "desc": "Ustawiaj powtarzanie codziennie, co tydzień, co miesiąc."
+        },
+        "tracking": {
+            "title": "Śledzenie Czasu",
+            "desc": "Śledź czas spędzony nad zadaniami."
+        },
+        "filters": {
+            "title": "Inteligentne Filtry",
+            "desc": "Twórz własne widoki dostosowane do pracy."
+        },
+        "themes": {
+            "title": "Motywy i Wygląd",
+            "desc": "Dostosuj wygląd aplikacji do siebie."
+        }
+    }
+  },
+  "task_form": {
+    "title": "Dodaj Nowe Zadanie",
+    "edit_title": "Edytuj Zadanie",
+    "description": "Utwórz nowe zadanie. Kliknij zapisz gdy skończysz.",
+    "title_label": "Tytuł",
+    "title_placeholder": "np. Kupić mleko",
+    "desc_label": "Opis",
+    "desc_placeholder": "Dodaj szczegóły...",
+    "category_label": "Kategoria",
+    "select_category": "Wybierz kategorię",
+    "due_date_label": "Termin",
+    "pick_date": "Wybierz datę",
+    "priority_label": "Priorytet",
+    "recurrence_label": "Powtarzanie",
+    "recurrence": {
+        "none": "Nigdy",
+        "daily": "Codziennie",
+        "weekly": "Co tydzień",
+        "monthly": "Co miesiąc"
+    },
+    "priorities": {
+        "low": "Niski",
+        "medium": "Średni",
+        "high": "Wysoki"
+    },
+    "cancel": "Anuluj",
+    "save": "Zapisz Zadanie",
+    "nlp_hints": {
+        "0": "Spróbuj: \"Kupić mleko jutro !wysoki @Osobiste\"",
+        "1": "Spróbuj: \"Spotkanie zespołu w piątek @Praca !średni\"",
+        "2": "Spróbuj: \"Zadzwonić do mamy dzisiaj !wysoki\"",
+        "3": "Spróbuj: \"Skończyć raport w przyszłym tygodniu @Praca\"",
+        "4": "Spróbuj: \"Siłownia wieczorem @Osobiste\"",
+        "5": "Spróbuj: \"Zarezerwować loty !średni @Podróże\"",
+        "6": "Spróbuj: \"Opłacić rachunki w poniedziałek !wysoki\"",
+        "7": "Spróbuj: \"Wizyta u dentysty jutro @Zdrowie\"",
+        "8": "Spróbuj: \"Przegląd tygodniowy !niski @Praca\"",
+        "9": "Spróbuj: \"Serwis samochodu w przyszłym miesiącu @Auto\""
+    }
+  },
+  "menu": {
+    "quick_menu": "Szybkie Menu",
+    "keyboard_shortcuts": "Skróty Klawiszowe",
+    "settings": "Ustawienia",
+    "appearance": "Wygląd",
+    "help": "Pomoc i Wsparcie"
+  },
+  "search": {
+      "placeholder": "Szukaj zadań...",
+      "no_results": "Brak wyników.",
+      "type_to_search": "Zacznij pisać...",
+      "searching": "Szukanie...",
+      "tasks": "Zadania"
+  }
+}

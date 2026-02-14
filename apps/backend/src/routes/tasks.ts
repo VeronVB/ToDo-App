@@ -1,0 +1,541 @@
+import { FastifyInstance } from 'fastify';
+import { z } from 'zod';
+import { db } from '../db/client.js';
+import { ITask, ITag } from 'shared';
+import { addDays, addWeeks, addMonths } from 'date-fns';
+
+export default async function tasksRoutes(fastify: FastifyInstance) {
+  
+  // GET /api/tasks - List all tasks (hierarchical or flat search)
+  fastify.get<{ Querystring: { view?: string, search?: string } }>('/api/tasks', async (request) => {
+    const { view, search } = request.query;
+    console.log(`[API] GET /tasks search="${search}" view="${view}"`);
+
+    let query = `
+      SELECT 
+        id, title, description, completed, priority, 
+        category_id as categoryId, parent_id as parentId, 
+        position, depth, due_date as dueDate, recurrence,
+        pending_parent_completion as pendingParentCompletion,
+        created_at as createdAt, updated_at as updatedAt 
+      FROM tasks 
+    `;
+    
+    const params: any[] = [];
+    const conditions: string[] = [];
+
+    if (search) {
+      // Normalize search term (remove leading # for tag search)
+      const term = search.trim();
+      const tagTerm = term.startsWith('#') ? term.slice(1) : term;
+
+      conditions.push(`(
+        title LIKE ? OR 
+        description LIKE ? OR 
+        EXISTS (
+            SELECT 1 FROM task_tags tt 
+            JOIN tags t ON tt.tag_id = t.id 
+            WHERE tt.task_id = tasks.id AND t.name LIKE ?
+        )
+      )`);
+      params.push(`%${term}%`, `%${term}%`, `%${tagTerm}%`);
+    }
+
+    if (conditions.length > 0) {
+      query += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    query += ' ORDER BY position ASC';
+
+    const rows = db.prepare(query).all(...params) as ITask[];
+
+    const taskIds = rows.map(r => r.id);
+    if (taskIds.length > 0) {
+        const placeholders = taskIds.map(() => '?').join(',');
+        const tagsMap = new Map<number, ITag[]>();
+        
+        const taskTags = db.prepare(`
+            SELECT tt.task_id, t.id, t.name, t.color, t.created_at as createdAt
+            FROM task_tags tt
+            JOIN tags t ON tt.tag_id = t.id
+            WHERE tt.task_id IN (${placeholders})
+        `).all(...taskIds) as (ITag & { task_id: number })[];
+
+        taskTags.forEach(tt => {
+            if (!tagsMap.has(tt.task_id)) {
+                tagsMap.set(tt.task_id, []);
+            }
+            tagsMap.get(tt.task_id)?.push({
+                id: tt.id,
+                name: tt.name,
+                color: tt.color,
+                createdAt: tt.createdAt
+            });
+        });
+
+        rows.forEach(row => {
+            row.tags = tagsMap.get(row.id) || [];
+            row.children = [];
+            (row as any).completed = Boolean(row.completed);
+            (row as any).pendingParentCompletion = Boolean(row.pendingParentCompletion);
+        });
+    } else {
+        rows.forEach(row => {
+            row.tags = [];
+            row.children = [];
+            (row as any).completed = Boolean(row.completed);
+            (row as any).pendingParentCompletion = Boolean(row.pendingParentCompletion);
+        });
+    }
+
+    // If searching, return flat list
+    if (search) {
+        return rows;
+    }
+
+    // Otherwise, build tree
+    const taskMap = new Map<number, ITask>();
+    rows.forEach(row => {
+        taskMap.set(row.id, row);
+    });
+
+    const rootTasks: ITask[] = [];
+    rows.forEach(row => {
+        if (row.parentId) {
+            const parent = taskMap.get(row.parentId);
+            if (parent) {
+                parent.children?.push(row);
+            } else {
+                rootTasks.push(row);
+            }
+        } else {
+            rootTasks.push(row);
+        }
+    });
+
+    return rootTasks;
+  });
+
+  // POST /api/tasks - Create new task
+  fastify.post('/api/tasks', async (request, reply) => {
+    const CreateTaskSchema = z.object({
+      title: z.string().min(1),
+      description: z.string().optional().nullable(),
+      priority: z.enum(['low', 'medium', 'high']).default('medium'),
+      categoryId: z.number().optional().nullable(),
+      parentId: z.number().optional().nullable(),
+      dueDate: z.string().optional().nullable(),
+      recurrence: z.enum(['none', 'daily', 'weekly', 'monthly']).optional().default('none'),
+      tags: z.array(z.string()).optional()
+    });
+
+    const body = CreateTaskSchema.parse(request.body);
+    
+    const createTransaction = db.transaction(() => {
+        // Get max position
+        let position = 0;
+        if (body.parentId) {
+            const result = db.prepare('SELECT MAX(position) as maxPos FROM tasks WHERE parent_id = ?').get(body.parentId) as { maxPos: number };
+            position = (result?.maxPos || 0) + 1;
+        } else {
+            const result = db.prepare('SELECT MAX(position) as maxPos FROM tasks WHERE parent_id IS NULL').get() as { maxPos: number };
+            position = (result?.maxPos || 0) + 1;
+        }
+        
+        // Calculate depth
+        let depth = 0;
+        if (body.parentId) {
+            const parent = db.prepare('SELECT depth FROM tasks WHERE id = ?').get(body.parentId) as { depth: number };
+            if (parent) depth = parent.depth + 1;
+        }
+
+        const info = db.prepare(`
+          INSERT INTO tasks (title, description, priority, category_id, parent_id, position, depth, due_date, recurrence)
+          VALUES (@title, @description, @priority, @categoryId, @parentId, @position, @depth, @dueDate, @recurrence)
+        `).run({
+          title: body.title,
+          description: body.description || null,
+          priority: body.priority,
+          categoryId: body.categoryId || null,
+          parentId: body.parentId || null,
+          position,
+          depth,
+          dueDate: body.dueDate || null,
+          recurrence: body.recurrence || 'none'
+        });
+
+        const taskId = info.lastInsertRowid as number;
+
+        // Handle Tags
+        if (body.tags && body.tags.length > 0) {
+            for (const tagName of body.tags) {
+                // Find or create tag
+                let tag = db.prepare('SELECT id FROM tags WHERE name = ?').get(tagName) as { id: number };
+                if (!tag) {
+                    const tagInfo = db.prepare('INSERT INTO tags (name) VALUES (?)').run(tagName);
+                    tag = { id: tagInfo.lastInsertRowid as number };
+                }
+                // Link tag
+                db.prepare('INSERT INTO task_tags (task_id, tag_id) VALUES (?, ?)').run(taskId, tag.id);
+            }
+        }
+
+        return taskId;
+    });
+
+    const newTaskId = createTransaction();
+
+    const newTask = db.prepare(`
+      SELECT 
+        id, title, description, completed, priority, 
+        category_id as categoryId, parent_id as parentId, 
+        position, depth, due_date as dueDate, recurrence,
+        pending_parent_completion as pendingParentCompletion,
+        created_at as createdAt, updated_at as updatedAt 
+      FROM tasks WHERE id = ?
+    `).get(newTaskId) as ITask;
+
+    // Fetch tags for new task
+    const tags = db.prepare(`
+        SELECT t.id, t.name, t.color, t.created_at as createdAt
+        FROM task_tags tt
+        JOIN tags t ON tt.tag_id = t.id
+        WHERE tt.task_id = ?
+    `).all(newTaskId) as ITag[];
+
+    (newTask as any).completed = Boolean(newTask.completed);
+    (newTask as any).pendingParentCompletion = Boolean(newTask.pendingParentCompletion);
+    newTask.children = [];
+    newTask.tags = tags;
+
+    return newTask;
+  });
+
+  // PATCH /api/tasks/:id - Update task
+  fastify.patch('/api/tasks/:id', async (request, reply) => {
+    const { id } = request.params as { id: string };
+    
+    const UpdateTaskSchema = z.object({
+      title: z.string().optional(),
+      description: z.string().optional().nullable(),
+      completed: z.boolean().optional(),
+      priority: z.enum(['low', 'medium', 'high']).optional(),
+      categoryId: z.number().optional().nullable(),
+      dueDate: z.string().optional().nullable(),
+      recurrence: z.enum(['none', 'daily', 'weekly', 'monthly']).optional(),
+      tags: z.array(z.string()).optional()
+    });
+
+    const body = UpdateTaskSchema.parse(request.body);
+    
+    const updateTransaction = db.transaction(() => {
+        // Helper: Process recurrence for a completed task
+        const processRecurrence = (task: ITask, originalTaskId: number) => {
+            console.log(`[DEBUG processRecurrence] Called for task: ${originalTaskId}, recurrence: ${task.recurrence}`);
+            if (!task.recurrence || task.recurrence === 'none') return;
+
+            let nextDate: Date;
+            const baseDate = task.dueDate ? new Date(task.dueDate) : new Date();
+            
+            switch (task.recurrence) {
+                case 'daily': nextDate = addDays(baseDate, 1); break;
+                case 'weekly': nextDate = addWeeks(baseDate, 1); break;
+                case 'monthly': nextDate = addMonths(baseDate, 1); break;
+                default: nextDate = addDays(baseDate, 1);
+            }
+
+            const nextDateStr = nextDate.toISOString();
+
+            // Calculate position (append to end of list at root level)
+            const result = db.prepare('SELECT MAX(position) as maxPos FROM tasks WHERE parent_id IS NULL').get() as { maxPos: number };
+            const position = (result?.maxPos || 0) + 1;
+
+            // Determine Category ID
+            let newCategoryId = task.categoryId;
+            let ancestorId = task.parentId;
+            
+            while (!newCategoryId && ancestorId) {
+                const ancestor = db.prepare('SELECT category_id as categoryId, parent_id as parentId FROM tasks WHERE id = ?').get(ancestorId) as { categoryId: number, parentId: number };
+                if (ancestor) {
+                    if (ancestor.categoryId) {
+                        newCategoryId = ancestor.categoryId;
+                    }
+                    ancestorId = ancestor.parentId;
+                } else {
+                    break;
+                }
+            }
+
+            console.log(`[RECURRENCE] Spawning new task from ID: ${originalTaskId}, NewParent: NULL, Category: ${newCategoryId}`);
+
+            const insertInfo = db.prepare(`
+                INSERT INTO tasks (title, description, priority, category_id, parent_id, position, depth, due_date, recurrence, completed)
+                VALUES (@title, @description, @priority, @categoryId, @parentId, @position, @depth, @dueDate, @recurrence, 0)
+            `).run({
+                title: task.title,
+                description: task.description,
+                priority: task.priority,
+                categoryId: newCategoryId,
+                parentId: null, // Always root
+                position: position,
+                depth: 0, // Always depth 0
+                dueDate: nextDateStr,
+                recurrence: task.recurrence
+            });
+
+            const newTaskId = insertInfo.lastInsertRowid;
+            
+            // DEBUG: Verify new task state
+            const debugNewTask = db.prepare('SELECT * FROM tasks WHERE id = ?').get(newTaskId);
+            console.log('[RECURRENCE DEBUG] Created New Task:', debugNewTask);
+
+            // Copy Tags
+            const existingTags = db.prepare('SELECT tag_id FROM task_tags WHERE task_id = ?').all(originalTaskId) as { tag_id: number }[];
+            for (const t of existingTags) {
+                db.prepare('INSERT INTO task_tags (task_id, tag_id) VALUES (?, ?)').run(newTaskId, t.tag_id);
+            }
+        };
+
+        // Helper: Cascade completion to children
+        const completeChildren = (parentId: number) => {
+            console.log(`[DEBUG completeChildren] Processing parent: ${parentId}`);
+            const children = db.prepare(`
+                SELECT 
+                    id, title, description, completed, priority, 
+                    category_id as categoryId, parent_id as parentId, 
+                    position, depth, due_date as dueDate, recurrence,
+                    pending_parent_completion as pendingParentCompletion
+                FROM tasks WHERE parent_id = ?
+            `).all(parentId) as ITask[];
+
+            console.log(`[DEBUG completeChildren] Found ${children.length} children:`, children.map(c => ({id: c.id, title: c.title, completed: c.completed, recurrence: c.recurrence, pendingParentCompletion: c.pendingParentCompletion})));
+
+            for (const child of children) {
+                // Check if child has pending_parent_completion - if so, process recurrence now
+                if (child.pendingParentCompletion) {
+                    processRecurrence(child, child.id);
+                    // DO NOT reset pending_parent_completion here - it will be reset when user sees the effect
+                    // The flag stays until the frontend shows the strikethrough
+                }
+                
+                // Mark complete
+                db.prepare('UPDATE tasks SET completed = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(child.id);
+                
+                // Recurse
+                completeChildren(child.id);
+            }
+        };
+
+        // 1. Get current task state
+        const currentTask = db.prepare(`
+            SELECT 
+                id, title, description, completed, priority, 
+                category_id as categoryId, parent_id as parentId, 
+                position, depth, due_date as dueDate, recurrence,
+                pending_parent_completion as pendingParentCompletion
+            FROM tasks WHERE id = ?
+        `).get(id) as ITask;
+        
+        if (!currentTask) throw new Error('Task not found');
+
+        // Construct dynamic update query
+        const fields: string[] = [];
+        const values: any = { id };
+
+        if (body.title !== undefined) { fields.push('title = @title'); values.title = body.title; }
+        if (body.description !== undefined) { fields.push('description = @description'); values.description = body.description; }
+        if (body.completed !== undefined) { fields.push('completed = @completed'); values.completed = body.completed ? 1 : 0; }
+        if (body.priority !== undefined) { fields.push('priority = @priority'); values.priority = body.priority; }
+        if (body.categoryId !== undefined) { fields.push('category_id = @categoryId'); values.categoryId = body.categoryId; }
+        if (body.dueDate !== undefined) { fields.push('due_date = @dueDate'); values.dueDate = body.dueDate; }
+        if (body.recurrence !== undefined) { fields.push('recurrence = @recurrence'); values.recurrence = body.recurrence; }
+
+        fields.push('updated_at = CURRENT_TIMESTAMP');
+
+        if (fields.length > 1) { // More than just updated_at logic check
+             db.prepare(`UPDATE tasks SET ${fields.join(', ')} WHERE id = @id`).run(values);
+        }
+
+        // Handle Tags Update
+        if (body.tags !== undefined) {
+            // Remove all existing tags
+            db.prepare('DELETE FROM task_tags WHERE task_id = ?').run(id);
+            
+            // Add new tags
+            for (const tagName of body.tags) {
+                // Find or create tag
+                let tag = db.prepare('SELECT id FROM tags WHERE name = ?').get(tagName) as { id: number };
+                if (!tag) {
+                    const tagInfo = db.prepare('INSERT INTO tags (name) VALUES (?)').run(tagName);
+                    tag = { id: tagInfo.lastInsertRowid as number };
+                }
+                // Link tag
+                db.prepare('INSERT INTO task_tags (task_id, tag_id) VALUES (?, ?)').run(id, tag.id);
+            }
+        }
+
+        // Handle Completion Logic (Recurrence + Cascade)
+        if (body.completed === true) {
+            // Check if this task has a parent AND has recurrence - defer recurrence until parent is completed
+            if (currentTask.parentId && currentTask.recurrence && currentTask.recurrence !== 'none') {
+                // Task is a child with recurrence - set pending flag instead of creating new task
+                console.log(`[DEBUG] Setting pending_parent_completion=1 for child task: ${id} (has parent and recurrence)`);
+                db.prepare('UPDATE tasks SET pending_parent_completion = 1 WHERE id = ?').run(id);
+            } else if (!currentTask.completed) {
+                // Task is root-level OR has no recurrence AND was not completed before - process recurrence now
+                console.log(`[DEBUG] Processing recurrence for task: ${id} (root level or no recurrence)`);
+                processRecurrence(currentTask, Number(id));
+            }
+
+            // When completing a parent, check all incomplete children with recurrence and set pending flag
+            const incompleteChildren = db.prepare(`
+                SELECT id FROM tasks 
+                WHERE parent_id = ? AND completed = 0 AND recurrence != 'none' AND recurrence IS NOT NULL
+            `).all(Number(id)) as { id: number }[];
+            console.log(`[DEBUG] Found ${incompleteChildren.length} incomplete children with recurrence for parent ${id}:`, incompleteChildren);
+            
+            for (const child of incompleteChildren) {
+                console.log(`[DEBUG] Setting pending_parent_completion=1 for child: ${child.id}`);
+                db.prepare('UPDATE tasks SET pending_parent_completion = 1 WHERE id = ?').run(child.id);
+            }
+        }
+
+        // Always cascade to children when completing a task (to process pending recurrences)
+        if (body.completed === true) {
+            console.log(`[DEBUG] completeChildren called for parent: ${id}`);
+            completeChildren(Number(id));
+        }
+
+        // Handle uncompleting a task - clear pending_parent_completion if set
+        if (body.completed === false && currentTask.completed) {
+            db.prepare('UPDATE tasks SET pending_parent_completion = 0 WHERE id = ?').run(id);
+        }
+    });
+
+    updateTransaction();
+
+    const updatedTask = db.prepare(`
+      SELECT 
+        id, title, description, completed, priority, 
+        category_id as categoryId, parent_id as parentId, 
+        position, depth, due_date as dueDate, recurrence,
+        pending_parent_completion as pendingParentCompletion,
+        created_at as createdAt, updated_at as updatedAt 
+      FROM tasks WHERE id = ?
+    `).get(id) as ITask;
+
+    const tags = db.prepare(`
+        SELECT t.id, t.name, t.color, t.created_at as createdAt
+        FROM task_tags tt
+        JOIN tags t ON tt.tag_id = t.id
+        WHERE tt.task_id = ?
+    `).all(id) as ITag[];
+
+    (updatedTask as any).completed = Boolean(updatedTask.completed);
+    (updatedTask as any).pendingParentCompletion = Boolean(updatedTask.pendingParentCompletion);
+    updatedTask.tags = tags;
+
+    return updatedTask;
+  });
+
+  // DELETE /api/tasks/:id
+  fastify.delete('/api/tasks/:id', async (request, reply) => {
+    const { id } = request.params as { id: string };
+    
+    // SQLite with ON DELETE CASCADE will handle children
+    const info = db.prepare('DELETE FROM tasks WHERE id = ?').run(id);
+    
+    if (info.changes === 0) {
+      return reply.status(404).send({ error: 'Task not found' });
+    }
+    
+    return { success: true, id };
+  });
+
+  // POST /api/tasks/:id/move - Move task
+  fastify.post('/api/tasks/:id/move', async (request, reply) => {
+    const { id } = request.params as { id: string };
+    const MoveTaskSchema = z.object({
+      parentId: z.number().nullable(),
+      newPosition: z.number()
+    });
+    
+    const { parentId, newPosition } = MoveTaskSchema.parse(request.body);
+    
+    // Transaction to ensure consistency
+    const moveTransaction = db.transaction(() => {
+        // 1. Get current task info
+        const task = db.prepare('SELECT parent_id, position FROM tasks WHERE id = ?').get(id) as { parent_id: number | null, position: number };
+        if (!task) throw new Error('Task not found');
+
+        // 2. Calculate new depth
+        let newDepth = 0;
+        if (parentId) {
+            const parent = db.prepare('SELECT depth FROM tasks WHERE id = ?').get(parentId) as { depth: number };
+            if (parent) newDepth = parent.depth + 1;
+        }
+
+        // 3. Remove from old list: Shift positions of siblings coming after
+        if (task.parent_id === parentId) {
+             // Same parent, just reordering
+             if (task.position < newPosition) {
+                 // Moved down: Shift items between old and new pos UP (-1)
+                 db.prepare(`
+                    UPDATE tasks 
+                    SET position = position - 1 
+                    WHERE (parent_id IS @parentId OR (parent_id IS NULL AND @parentId IS NULL))
+                    AND position > @oldPos AND position <= @newPos
+                 `).run({ parentId: task.parent_id, oldPos: task.position, newPos: newPosition });
+             } else {
+                 // Moved up: Shift items between new and old pos DOWN (+1)
+                 db.prepare(`
+                    UPDATE tasks 
+                    SET position = position + 1 
+                    WHERE (parent_id IS @parentId OR (parent_id IS NULL AND @parentId IS NULL))
+                    AND position >= @newPos AND position < @oldPos
+                 `).run({ parentId: task.parent_id, oldPos: task.position, newPos: newPosition });
+             }
+        } else {
+            // Different parent
+            // A. Close gap in old list
+            db.prepare(`
+                UPDATE tasks 
+                SET position = position - 1 
+                WHERE (parent_id IS @oldParentId OR (parent_id IS NULL AND @oldParentId IS NULL))
+                AND position > @oldPos
+            `).run({ oldParentId: task.parent_id, oldPos: task.position });
+
+            // B. Open gap in new list
+            db.prepare(`
+                UPDATE tasks 
+                SET position = position + 1 
+                WHERE (parent_id IS @newParentId OR (parent_id IS NULL AND @newParentId IS NULL))
+                AND position >= @newPos
+            `).run({ newParentId: parentId, newPos: newPosition });
+        }
+
+        // 4. Update the task itself
+        db.prepare('UPDATE tasks SET parent_id = ?, position = ?, depth = ? WHERE id = ?')
+          .run(parentId, newPosition, newDepth, id);
+          
+        // 5. Update depth of all children recursively (if any)
+        const updateChildrenDepth = (parentId: number, parentDepth: number) => {
+             const children = db.prepare('SELECT id FROM tasks WHERE parent_id = ?').all(parentId) as { id: number }[];
+             const childDepth = parentDepth + 1;
+             for (const child of children) {
+                 db.prepare('UPDATE tasks SET depth = ? WHERE id = ?').run(childDepth, child.id);
+                 updateChildrenDepth(child.id, childDepth);
+             }
+        };
+        
+        updateChildrenDepth(Number(id), newDepth);
+    });
+
+    try {
+        moveTransaction();
+        return { success: true };
+    } catch (err: any) {
+        return reply.status(500).send({ error: err.message });
+    }
+  });
+}

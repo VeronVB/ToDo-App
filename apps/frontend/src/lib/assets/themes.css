@@ -1,0 +1,167 @@
+  /* Neutral */
+  .theme-neutral {
+    --primary: #171717;
+    --primary-foreground: #fafafa;
+    --ring: #171717;
+    --accent: #171717;
+    --accent-foreground: #fafafa;
+    --sidebar-primary: #171717;
+    --sidebar-primary-foreground: #fafafa;
+    --sidebar-accent-foreground: #171717;
+    --sidebar-ring: #171717;
+  }
+  .dark .theme-neutral {
+    --primary: #fafafa;
+    --primary-foreground: #171717;
+    --ring: #d4d4d8;
+    --accent: #fafafa;
+    --accent-foreground: #171717;
+    --sidebar-primary: #fafafa;
+    --sidebar-primary-foreground: #171717;
+    --sidebar-accent-foreground: #fafafa;
+    --sidebar-ring: #d4d4d8;
+  }
+
+  /* Red */
+  .theme-red {
+    --primary: #dc2626;
+    --primary-foreground: #fef2f2;
+    --ring: #dc2626;
+    --accent: #dc2626;
+    --accent-foreground: #fef2f2;
+    --sidebar-primary: #dc2626;
+    --sidebar-primary-foreground: #fef2f2;
+    --sidebar-accent-foreground: #dc2626;
+    --sidebar-ring: #dc2626;
+  }
+  .dark .theme-red {
+    --primary: #f87171;
+    --primary-foreground: #450a0a;
+    --ring: #f87171;
+    --accent: #f87171;
+    --accent-foreground: #450a0a;
+    --sidebar-primary: #f87171;
+    --sidebar-primary-foreground: #450a0a;
+    --sidebar-accent-foreground: #f87171;
+    --sidebar-ring: #f87171;
+  }
+
+  /* Orange */
+  .theme-orange {
+    --primary: #ea580c;
+    --primary-foreground: #fff7ed;
+    --ring: #ea580c;
+    --accent: #ea580c;
+    --accent-foreground: #fff7ed;
+    --sidebar-primary: #ea580c;
+    --sidebar-primary-foreground: #fff7ed;
+    --sidebar-accent-foreground: #ea580c;
+    --sidebar-ring: #ea580c;
+  }
+  .dark .theme-orange {
+    --primary: #fb923c;
+    --primary-foreground: #431407;
+    --ring: #fb923c;
+    --accent: #fb923c;
+    --accent-foreground: #431407;
+    --sidebar-primary: #fb923c;
+    --sidebar-primary-foreground: #431407;
+    --sidebar-accent-foreground: #fb923c;
+    --sidebar-ring: #fb923c;
+  }
+
+  /* Green */
+  .theme-green {
+    --primary: #16a34a;
+    --primary-foreground: #f0fdf4;
+    --ring: #16a34a;
+    --accent: #16a34a;
+    --accent-foreground: #f0fdf4;
+    --sidebar-primary: #16a34a;
+    --sidebar-primary-foreground: #f0fdf4;
+    --sidebar-accent-foreground: #16a34a;
+    --sidebar-ring: #16a34a;
+  }
+  .dark .theme-green {
+    --primary: #4ade80;
+    --primary-foreground: #052e16;
+    --ring: #4ade80;
+    --accent: #4ade80;
+    --accent-foreground: #052e16;
+    --sidebar-primary: #4ade80;
+    --sidebar-primary-foreground: #052e16;
+    --sidebar-accent-foreground: #4ade80;
+    --sidebar-ring: #4ade80;
+  }
+
+  /* Blue */
+  .theme-blue {
+    --primary: #2563eb;
+    --primary-foreground: #eff6ff;
+    --ring: #2563eb;
+    --accent: #2563eb;
+    --accent-foreground: #eff6ff;
+    --sidebar-primary: #2563eb;
+    --sidebar-primary-foreground: #eff6ff;
+    --sidebar-accent-foreground: #2563eb;
+    --sidebar-ring: #2563eb;
+  }
+  .dark .theme-blue {
+    --primary: #60a5fa;
+    --primary-foreground: #1e3a8a;
+    --ring: #60a5fa;
+    --accent: #60a5fa;
+    --accent-foreground: #1e3a8a;
+    --sidebar-primary: #60a5fa;
+    --sidebar-primary-foreground: #1e3a8a;
+    --sidebar-accent-foreground: #60a5fa;
+    --sidebar-ring: #60a5fa;
+  }
+
+  /* Yellow */
+  .theme-yellow {
+    --primary: #ca8a04;
+    --primary-foreground: #fefce8;
+    --ring: #ca8a04;
+    --accent: #ca8a04;
+    --accent-foreground: #fefce8;
+    --sidebar-primary: #ca8a04;
+    --sidebar-primary-foreground: #fefce8;
+    --sidebar-accent-foreground: #ca8a04;
+    --sidebar-ring: #ca8a04;
+  }
+  .dark .theme-yellow {
+    --primary: #facc15;
+    --primary-foreground: #422006;
+    --ring: #facc15;
+    --accent: #facc15;
+    --accent-foreground: #422006;
+    --sidebar-primary: #facc15;
+    --sidebar-primary-foreground: #422006;
+    --sidebar-accent-foreground: #facc15;
+    --sidebar-ring: #facc15;
+  }
+
+  /* Violet */
+  .theme-violet {
+    --primary: #7c3aed;
+    --primary-foreground: #f5f3ff;
+    --ring: #7c3aed;
+    --accent: #7c3aed;
+    --accent-foreground: #f5f3ff;
+    --sidebar-primary: #7c3aed;
+    --sidebar-primary-foreground: #f5f3ff;
+    --sidebar-accent-foreground: #7c3aed;
+    --sidebar-ring: #7c3aed;
+  }
+  .dark .theme-violet {
+    --primary: #a78bfa;
+    --primary-foreground: #2e1065;
+    --ring: #a78bfa;
+    --accent: #a78bfa;
+    --accent-foreground: #2e1065;
+    --sidebar-primary: #a78bfa;
+    --sidebar-primary-foreground: #2e1065;
+    --sidebar-accent-foreground: #a78bfa;
+    --sidebar-ring: #a78bfa;
+  }
