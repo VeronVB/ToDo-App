@@ -250,7 +250,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
             const result = db.prepare('SELECT MAX(position) as maxPos FROM tasks WHERE parent_id IS NULL').get() as { maxPos: number };
             const position = (result?.maxPos || 0) + 1;
 
-            // Determine Category ID
+            // Determine Category ID - walk up ancestor chain
             let newCategoryId = task.categoryId;
             let ancestorId = task.parentId;
             
@@ -285,9 +285,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
 
             const newTaskId = insertInfo.lastInsertRowid;
             
-            // DEBUG: Verify new task state
-            const debugNewTask = db.prepare('SELECT * FROM tasks WHERE id = ?').get(newTaskId);
-            console.log('[RECURRENCE DEBUG] Created New Task:', debugNewTask);
+            console.log('[RECURRENCE DEBUG] Created New Task ID:', newTaskId);
 
             // Copy Tags
             const existingTags = db.prepare('SELECT tag_id FROM task_tags WHERE task_id = ?').all(originalTaskId) as { tag_id: number }[];
@@ -308,25 +306,26 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
                 FROM tasks WHERE parent_id = ?
             `).all(parentId) as ITask[];
 
-            console.log(`[DEBUG completeChildren] Found ${children.length} children:`, children.map(c => ({id: c.id, title: c.title, completed: c.completed, recurrence: c.recurrence, pendingParentCompletion: c.pendingParentCompletion})));
+            console.log(`[DEBUG completeChildren] Found ${children.length} children`);
 
             for (const child of children) {
-                // Check if child has pending_parent_completion - if so, process recurrence now
+                // If child has pending_parent_completion, process its recurrence NOW
                 if (child.pendingParentCompletion) {
+                    console.log(`[DEBUG] Processing deferred recurrence for pending child: ${child.id}`);
                     processRecurrence(child, child.id);
-                    // DO NOT reset pending_parent_completion here - it will be reset when user sees the effect
-                    // The flag stays until the frontend shows the strikethrough
+                    // Reset the pending flag
+                    db.prepare('UPDATE tasks SET pending_parent_completion = 0 WHERE id = ?').run(child.id);
                 }
                 
                 // Mark complete
                 db.prepare('UPDATE tasks SET completed = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?').run(child.id);
                 
-                // Recurse
+                // Recurse into grandchildren
                 completeChildren(child.id);
             }
         };
 
-        // 1. Get current task state
+        // 1. Get current task state BEFORE any updates
         const currentTask = db.prepare(`
             SELECT 
                 id, title, description, completed, priority, 
@@ -337,6 +336,9 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
         `).get(id) as ITask;
         
         if (!currentTask) throw new Error('Task not found');
+
+        // Convert SQLite integers to booleans for logic
+        const wasCompleted = Boolean(currentTask.completed);
 
         // Construct dynamic update query
         const fields: string[] = [];
@@ -352,62 +354,65 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
 
         fields.push('updated_at = CURRENT_TIMESTAMP');
 
-        if (fields.length > 1) { // More than just updated_at logic check
+        if (fields.length > 1) {
              db.prepare(`UPDATE tasks SET ${fields.join(', ')} WHERE id = @id`).run(values);
         }
 
         // Handle Tags Update
         if (body.tags !== undefined) {
-            // Remove all existing tags
             db.prepare('DELETE FROM task_tags WHERE task_id = ?').run(id);
             
-            // Add new tags
             for (const tagName of body.tags) {
-                // Find or create tag
                 let tag = db.prepare('SELECT id FROM tags WHERE name = ?').get(tagName) as { id: number };
                 if (!tag) {
                     const tagInfo = db.prepare('INSERT INTO tags (name) VALUES (?)').run(tagName);
                     tag = { id: tagInfo.lastInsertRowid as number };
                 }
-                // Link tag
                 db.prepare('INSERT INTO task_tags (task_id, tag_id) VALUES (?, ?)').run(id, tag.id);
             }
         }
 
-        // Handle Completion Logic (Recurrence + Cascade)
-        if (body.completed === true) {
-            // Check if this task has a parent AND has recurrence - defer recurrence until parent is completed
-            if (currentTask.parentId && currentTask.recurrence && currentTask.recurrence !== 'none') {
-                // Task is a child with recurrence - set pending flag instead of creating new task
-                console.log(`[DEBUG] Setting pending_parent_completion=1 for child task: ${id} (has parent and recurrence)`);
-                db.prepare('UPDATE tasks SET pending_parent_completion = 1 WHERE id = ?').run(id);
-            } else if (!currentTask.completed) {
-                // Task is root-level OR has no recurrence AND was not completed before - process recurrence now
-                console.log(`[DEBUG] Processing recurrence for task: ${id} (root level or no recurrence)`);
-                processRecurrence(currentTask, Number(id));
-            }
-
-            // When completing a parent, check all incomplete children with recurrence and set pending flag
-            const incompleteChildren = db.prepare(`
-                SELECT id FROM tasks 
-                WHERE parent_id = ? AND completed = 0 AND recurrence != 'none' AND recurrence IS NOT NULL
-            `).all(Number(id)) as { id: number }[];
-            console.log(`[DEBUG] Found ${incompleteChildren.length} incomplete children with recurrence for parent ${id}:`, incompleteChildren);
+        // ═══════════════════════════════════════════════════════════════
+        // COMPLETION LOGIC (Recurrence + Cascade)
+        // ═══════════════════════════════════════════════════════════════
+        if (body.completed === true && !wasCompleted) {
+            // Only process if transitioning from incomplete → complete
             
-            for (const child of incompleteChildren) {
-                console.log(`[DEBUG] Setting pending_parent_completion=1 for child: ${child.id}`);
-                db.prepare('UPDATE tasks SET pending_parent_completion = 1 WHERE id = ?').run(child.id);
+            if (currentTask.parentId && currentTask.recurrence && currentTask.recurrence !== 'none') {
+                // ─── CASE 1: Child task with recurrence ───
+                // Defer recurrence creation until parent is completed.
+                // Just set the pending flag. Do NOT cascade, do NOT create new task.
+                console.log(`[COMPLETION] Child ${id} with recurrence "${currentTask.recurrence}" → setting pending_parent_completion=1`);
+                db.prepare('UPDATE tasks SET pending_parent_completion = 1 WHERE id = ?').run(id);
+                
+            } else {
+                // ─── CASE 2: Root task OR child without recurrence ───
+                
+                // 2a. Process own recurrence (creates new root task if applicable)
+                console.log(`[COMPLETION] Task ${id} → processing own recurrence`);
+                processRecurrence(currentTask, Number(id));
+                
+                // 2b. Before cascade, set pending flag on incomplete children that have recurrence
+                // (these haven't been individually checked off yet)
+                const incompleteRecurringChildren = db.prepare(`
+                    SELECT id FROM tasks 
+                    WHERE parent_id = ? AND completed = 0 AND recurrence != 'none' AND recurrence IS NOT NULL
+                `).all(Number(id)) as { id: number }[];
+                
+                for (const child of incompleteRecurringChildren) {
+                    console.log(`[COMPLETION] Auto-setting pending_parent_completion=1 for unchecked recurring child: ${child.id}`);
+                    db.prepare('UPDATE tasks SET pending_parent_completion = 1 WHERE id = ?').run(child.id);
+                }
+                
+                // 2c. Cascade completion to all children
+                // completeChildren will process pending recurrences and mark everything complete
+                console.log(`[COMPLETION] Cascading completion from parent: ${id}`);
+                completeChildren(Number(id));
             }
-        }
-
-        // Always cascade to children when completing a task (to process pending recurrences)
-        if (body.completed === true) {
-            console.log(`[DEBUG] completeChildren called for parent: ${id}`);
-            completeChildren(Number(id));
         }
 
         // Handle uncompleting a task - clear pending_parent_completion if set
-        if (body.completed === false && currentTask.completed) {
+        if (body.completed === false && wasCompleted) {
             db.prepare('UPDATE tasks SET pending_parent_completion = 0 WHERE id = ?').run(id);
         }
     });
@@ -442,7 +447,6 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
   fastify.delete('/api/tasks/:id', async (request, reply) => {
     const { id } = request.params as { id: string };
     
-    // SQLite with ON DELETE CASCADE will handle children
     const info = db.prepare('DELETE FROM tasks WHERE id = ?').run(id);
     
     if (info.changes === 0) {
@@ -462,24 +466,18 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
     
     const { parentId, newPosition } = MoveTaskSchema.parse(request.body);
     
-    // Transaction to ensure consistency
     const moveTransaction = db.transaction(() => {
-        // 1. Get current task info
         const task = db.prepare('SELECT parent_id, position FROM tasks WHERE id = ?').get(id) as { parent_id: number | null, position: number };
         if (!task) throw new Error('Task not found');
 
-        // 2. Calculate new depth
         let newDepth = 0;
         if (parentId) {
             const parent = db.prepare('SELECT depth FROM tasks WHERE id = ?').get(parentId) as { depth: number };
             if (parent) newDepth = parent.depth + 1;
         }
 
-        // 3. Remove from old list: Shift positions of siblings coming after
         if (task.parent_id === parentId) {
-             // Same parent, just reordering
              if (task.position < newPosition) {
-                 // Moved down: Shift items between old and new pos UP (-1)
                  db.prepare(`
                     UPDATE tasks 
                     SET position = position - 1 
@@ -487,7 +485,6 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
                     AND position > @oldPos AND position <= @newPos
                  `).run({ parentId: task.parent_id, oldPos: task.position, newPos: newPosition });
              } else {
-                 // Moved up: Shift items between new and old pos DOWN (+1)
                  db.prepare(`
                     UPDATE tasks 
                     SET position = position + 1 
@@ -496,8 +493,6 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
                  `).run({ parentId: task.parent_id, oldPos: task.position, newPos: newPosition });
              }
         } else {
-            // Different parent
-            // A. Close gap in old list
             db.prepare(`
                 UPDATE tasks 
                 SET position = position - 1 
@@ -505,7 +500,6 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
                 AND position > @oldPos
             `).run({ oldParentId: task.parent_id, oldPos: task.position });
 
-            // B. Open gap in new list
             db.prepare(`
                 UPDATE tasks 
                 SET position = position + 1 
@@ -514,11 +508,9 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
             `).run({ newParentId: parentId, newPos: newPosition });
         }
 
-        // 4. Update the task itself
         db.prepare('UPDATE tasks SET parent_id = ?, position = ?, depth = ? WHERE id = ?')
           .run(parentId, newPosition, newDepth, id);
           
-        // 5. Update depth of all children recursively (if any)
         const updateChildrenDepth = (parentId: number, parentDepth: number) => {
              const children = db.prepare('SELECT id FROM tasks WHERE parent_id = ?').all(parentId) as { id: number }[];
              const childDepth = parentDepth + 1;

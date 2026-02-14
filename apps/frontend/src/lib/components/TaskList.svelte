@@ -59,6 +59,17 @@
       return result;
   }
 
+  // Helper: check if task OR any children have pendingParentCompletion
+  function hasPendingRecurringChild(task: ITask): boolean {
+      if (task.pendingParentCompletion === true) return true;
+      if (task.children) {
+          for (const child of task.children) {
+              if (hasPendingRecurringChild(child)) return true;
+          }
+      }
+      return false;
+  }
+
   // --- Filtering ---
   let filteredFlatTasks = $derived.by(() => {
       const allTasks = tasksStore.tasks; // This is a TREE now
@@ -66,7 +77,8 @@
       const project = appStore.selectedProject;
 
       if (view === 'project' && project) {
-          return allTasks.filter(t => !t.completed && (
+          // Show active tasks OR completed parents that have pending recurring children
+          return allTasks.filter(t => (!t.completed || hasPendingRecurringChild(t)) && (
               (t.categoryId?.toString() === project.toString()) || 
               (t.project?.toString() === project.toString())
           ));

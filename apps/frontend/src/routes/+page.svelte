@@ -5,10 +5,23 @@
   import { uiStore } from '$lib/stores/ui.svelte';
   import { settingsStore } from '$lib/stores/settings.svelte';
   import { t } from 'svelte-i18n';
+  import type { ITask } from 'shared';
   
   $effect(() => {
     tasksStore.fetchTasks();
   });
+
+  // Helper: rekurencyjne szukanie taska w drzewie
+  function findTaskById(tasks: ITask[], id: number): ITask | null {
+      for (const t of tasks) {
+          if (t.id === id) return t;
+          if (t.children) {
+              const found = findTaskById(t.children, id);
+              if (found) return found;
+          }
+      }
+      return null;
+  }
 
   function handleAddTask() {
       uiStore.openAdd();
@@ -23,7 +36,7 @@
   }
 
   function handleToggleTask(id: number, completed: boolean) {
-     const task = tasksStore.tasks.find(t => t.id === id);
+     const task = findTaskById(tasksStore.tasks, id);
      if (task) {
          tasksStore.toggleComplete(task);
      }
@@ -39,7 +52,7 @@
   }
 
   function handleEditTask(id: number) {
-      const task = tasksStore.tasks.find(t => t.id === id);
+      const task = findTaskById(tasksStore.tasks, id);
       if (task) {
           uiStore.openEdit(task);
       }
