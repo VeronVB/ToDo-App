@@ -267,5 +267,150 @@
     "help": "Pomoc i Wsparcie"
   },
   "search": { "placeholder": "Szukaj zadań...", "no_results": "Brak wyników.", "type_to_search": "Wpisz aby szukać...", "searching": "Szukanie...", "tasks": "Zadania" },
-  "timer": { "start_focus": "Rozpocznij Focus", "focus": "Focus", "short_break": "Krótka Przerwa", "long_break": "Długa Przerwa", "ready": "Gotowy", "pause": "Pauza", "resume": "Wznów", "stop": "Stop", "skip": "Pomiń", "session": "Sesja" }
+  "timer": { "start_focus": "Rozpocznij Focus", "focus": "Focus", "short_break": "Krótka Przerwa", "long_break": "Długa Przerwa", "ready": "Gotowy", "pause": "Pauza", "resume": "Wznów", "stop": "Stop", "skip": "Pomiń", "session": "Sesja" },
+  "sidebar_advanced": {
+    "tools": "Narzędzia",
+    "matrix": "Macierz Eisenhowera",
+    "kanban": "Tablica Kanban",
+    "briefing": "Poranny Przegląd",
+    "dashboard": "Pulpit Produkcji",
+    "focus": "Tryb Focus",
+    "review": "Przegląd Tygodniowy",
+    "templates": "Szablony",
+    "filters": "Zapisane Filtry",
+    "activity": "Log Aktywności",
+    "import_export": "Import/Eksport"
+  },
+  "matrix": {
+    "title": "Macierz Eisenhowera",
+    "do_first": "Zrób Najpierw",
+    "schedule": "Zaplanuj",
+    "delegate": "Deleguj",
+    "eliminate": "Wyeliminuj",
+    "urgent": "Pilne",
+    "not_urgent": "Niepilne",
+    "important": "Ważne",
+    "not_important": "Nieważne"
+  },
+  "kanban": {
+    "title": "Tablica Kanban",
+    "todo": "Do Zrobienia",
+    "in_progress": "W Trakcie",
+    "done": "Ukończone"
+  },
+  "briefing": {
+    "title": "Poranny Przegląd",
+    "greeting_morning": "Dzień dobry!",
+    "greeting_afternoon": "Dobry wieczór!",
+    "greeting_evening": "Dobry wieczór!",
+    "overdue": "Zaległe",
+    "due_today": "Na Dziś",
+    "upcoming": "Nadchodzące",
+    "completed_yesterday": "Ukończone Wczoraj",
+    "completed_this_week": "Ten Tydzień",
+    "total_active": "Łącznie Aktywnych",
+    "habits_pending": "Nawyki do Zrobienia"
+  },
+  "dashboard": {
+    "title": "Pulpit Produkcji",
+    "total_completed": "Ukończone",
+    "total_created": "Utworzone",
+    "total_active": "Aktywne Zadania",
+    "current_streak": "Obecna Seria",
+    "busiest_day": "Najbardziej Aktywny Dzień",
+    "completion_rate": "Wskaźnik Ukończenia",
+    "last_30_days": "Ostatnie 30 Dni"
+  },
+  "focus": {
+    "title": "Tryb Focus",
+    "start": "Start",
+    "pause": "Pauza",
+    "resume": "Wznów",
+    "stop": "Stop",
+    "skip": "Pomiń",
+    "sessions": "Sesje",
+    "pomodoro": "Pomodoro",
+    "short_break": "Krótka Przerwa",
+    "long_break": "Długa Przerwa"
+  },
+  "review": {
+    "title": "Przegląd Tygodniowy",
+    "step1": "Przegląd Ukończonych",
+    "step2": "Przegląd Zaległych",
+    "step3": "Planuj Następny Tydzień",
+    "step4": "Świętuj Sukcesy",
+    "no_completed": "Brak ukończonych zadań w tym tygodniu",
+    "no_overdue": "Brak zaległych zadań"
+  },
+  "templates": {
+    "title": "Szablony Zadań",
+    "create": "Utwórz Szablon",
+    "use": "Użyj Szablonu",
+    "delete": "Usuń",
+    "no_templates": "Brak szablonów",
+    "create_first": "Utwórz swój pierwszy szablon, aby szybko generować zadania"
+  },
+  "filters": {
+    "title": "Zapisane Filtry",
+    "create": "Utwórz Filtr",
+    "delete": "Usuń",
+    "no_filters": "Brak zapisanych filtrów",
+    "create_first": "Utwórz filtr, aby zapisać swoje niestandardowe widoki"
+  },
+  "activity": {
+    "title": "Log Aktywności",
+    "no_activity": "Brak aktywności",
+    "created": "utworzył",
+    "completed": "ukończył",
+    "uncompleted": "przywrócił",
+    "edited": "edytował",
+    "deleted": "usunał",
+    "moved": "przeniósł",
+    "dependency_added": "dodał zależność",
+    "dependency_removed": "usunął zależność"
+  },
+  "import_export": {
+    "title": "Import / Eksport",
+    "export_data": "Eksportuj Dane",
+    "import_data": "Importuj Dane",
+    "export_desc": "Pobierz wszystkie zadania, projekty i ustawienia jako JSON",
+    "import_desc": "Przywróć z poprzedniego eksportu",
+    "import_success": "Pomyślnie zaimportowano {count} zadań",
+    "last_export": "Ostatni eksport"
+  },
+  "quick_capture": {
+    "placeholder": "Szybkie dodawanie zadania... (Enter aby dodać)",
+    "hint": "Użyj @projekt #tag !priorytet daty jak jutro"
+  },
+  "batch_actions": {
+    "complete": "Ukończ",
+    "delete": "Usuń",
+    "move": "Przenieś do Projektu",
+    "priority": "Zmień Priorytet",
+    "select_all": "Zaznacz Wszystko",
+    "clear_selection": "Wyczyść Zaznaczenie"
+  },
+  "undo": {
+    "undone": "Cofnięto",
+    "task_restored": "Zadanie przywrócone",
+    "undo": "Cofnij"
+  },
+  "dependencies": {
+    "title": "Zależności",
+    "blocked_by": "Zablokowane przez",
+    "blocks": "Blokuje",
+    "add_dependency": "Dodaj Zależność",
+    "remove_dependency": "Usuń",
+    "circular_error": "Nie można dodać: utworzyłoby to cykliczną zależność",
+    "search_task": "Szukaj zadania..."
+  },
+  "reminders": {
+    "title": "Przypomnienia",
+    "add": "Dodaj Przypomnienie",
+    "in_30_min": "Za 30 minut",
+    "in_1_hour": "Za 1 godzinę",
+    "in_3_hours": "Za 3 godziny",
+    "tomorrow": "Jutro rano",
+    "custom": "Własne"
+  }
 }

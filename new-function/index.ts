@@ -20,14 +20,75 @@ export interface ITask {
   createdAt: string;
   updatedAt: string;
 
-  // Computed (nie w DB)
+  // Computed (not in DB)
   children?: ITask[];
   progress?: number;
   project?: string;
   tags?: ITag[];
   dependencies?: ITaskDependency[];
   isBlocked?: boolean;
-  selected?: boolean;
+  selected?: boolean; // for batch actions UI
+}
+
+export interface ITaskDependency {
+  id: number;
+  taskId: number;
+  dependsOnId: number;
+  dependsOnTitle?: string;
+  dependsOnCompleted?: boolean;
+  createdAt: string;
+}
+
+export interface ITaskTemplate {
+  id: number;
+  name: string;
+  title: string;
+  description?: string;
+  priority: 'low' | 'medium' | 'high';
+  categoryId?: number;
+  recurrence?: string;
+  tags?: string[];
+  subtasks?: { title: string; priority: string }[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ISavedFilter {
+  id: number;
+  name: string;
+  icon: string;
+  color: string;
+  filterConfig: IFilterConfig;
+  position: number;
+  createdAt: string;
+}
+
+export interface IFilterConfig {
+  priorities?: string[];
+  categories?: number[];
+  tags?: string[];
+  dueDateRange?: 'today' | 'tomorrow' | 'this_week' | 'next_week' | 'overdue' | 'no_date' | 'has_date';
+  completed?: boolean;
+  isHabit?: boolean;
+  hasNotes?: boolean;
+  searchText?: string;
+}
+
+export interface IActivityLog {
+  id: number;
+  taskId?: number;
+  taskTitle?: string;
+  action: 'created' | 'completed' | 'uncompleted' | 'edited' | 'deleted' | 'moved' | 'dependency_added' | 'dependency_removed';
+  details?: Record<string, any>;
+  createdAt: string;
+}
+
+export interface ITaskReminder {
+  id: number;
+  taskId: number;
+  remindAt: string;
+  reminded: boolean;
+  createdAt: string;
 }
 
 export interface ICategory {
@@ -98,70 +159,13 @@ export interface IApiToken {
   createdAt: string;
 }
 
-export interface ITaskDependency {
-  id: number;
-  taskId: number;
-  dependsOnId: number;
-  dependsOnTitle?: string;
-  dependsOnCompleted?: boolean;
-  createdAt: string;
-}
-
-export interface ITaskTemplate {
-  id: number;
-  name: string;
-  title: string;
-  description?: string;
-  priority: 'low' | 'medium' | 'high';
-  categoryId?: number;
-  recurrence?: string;
-  tags?: string[];
-  subtasks?: { title: string; priority: string }[];
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ISavedFilter {
-  id: number;
-  name: string;
-  icon: string;
-  color: string;
-  filterConfig: IFilterConfig;
-  position: number;
-  createdAt: string;
-}
-
-export interface IFilterConfig {
-  priorities?: string[];
-  categories?: number[];
-  tags?: string[];
-  dueDateRange?: 'today' | 'tomorrow' | 'this_week' | 'next_week' | 'overdue' | 'no_date' | 'has_date';
-  completed?: boolean;
-  isHabit?: boolean;
-  hasNotes?: boolean;
-  searchText?: string;
-}
-
-export interface IActivityLog {
-  id: number;
-  taskId?: number;
-  taskTitle?: string;
-  action: 'created' | 'completed' | 'uncompleted' | 'edited' | 'deleted' | 'moved' | 'dependency_added' | 'dependency_removed';
-  details?: Record<string, any>;
-  createdAt: string;
-}
-
-export interface ITaskReminder {
-  id: number;
-  taskId: number;
-  remindAt: string;
-  reminded: boolean;
-  createdAt: string;
-}
-
+// Eisenhower Matrix quadrant
 export type EisenhowerQuadrant = 'do_first' | 'schedule' | 'delegate' | 'eliminate';
+
+// Kanban column type
 export type KanbanGroupBy = 'status' | 'priority' | 'project';
 
+// Morning briefing data
 export interface IMorningBriefing {
   overdueTasks: ITask[];
   todayTasks: ITask[];
@@ -178,6 +182,7 @@ export interface IMorningBriefing {
   };
 }
 
+// Productivity stats
 export interface IProductivityStats {
   completedByDay: { date: string; count: number }[];
   avgCompletionTime: number;

@@ -7,11 +7,15 @@
   import * as Sheet from '$lib/components/ui/sheet';
   import { uiStore } from '$lib/stores/ui.svelte';
   import { settingsStore } from '$lib/stores/settings.svelte';
+  import { appStore } from '$lib/stores/app.svelte';
   import CheatsheetDialog from '$lib/components/CheatsheetDialog.svelte';
   import SettingsDialog from '$lib/components/SettingsDialog.svelte';
   import ProjectDialog from '$lib/components/ProjectDialog.svelte';
   import SearchDialog from '$lib/components/SearchDialog.svelte';
   import PomodoroTimer from '$lib/components/PomodoroTimer.svelte';
+  import QuickCapture from '$lib/components/QuickCapture.svelte';
+  import UndoToast from '$lib/components/UndoToast.svelte';
+  import BatchActionsToolbar from '$lib/components/BatchActionsToolbar.svelte';
   import { setupI18n } from '$lib/i18n';
   import { isLoading } from 'svelte-i18n';
   import { browser } from '$app/environment';
@@ -60,23 +64,33 @@
               modifier = e.metaKey;
               break;
           case 'linux':
-              // Linux users often prefer Alt to avoid browser/system conflicts (Ctrl+N, Ctrl+T)
               modifier = e.altKey;
               break;
           case 'windows':
               modifier = e.ctrlKey;
               break;
           default:
-              modifier = e.ctrlKey || e.metaKey; // Default / Hybrid
+              modifier = e.ctrlKey || e.metaKey;
               break;
       }
 
       // Allow escaping without modifier
       if (e.key === 'Escape') {
-          // Close modals if open
           if (uiStore.isTaskDialogOpen || uiStore.isSettingsOpen || uiStore.isCheatsheetOpen || uiStore.isProjectDialogOpen) {
               uiStore.close();
           }
+          if (appStore.batchMode) {
+              appStore.exitBatchMode();
+          }
+          if (uiStore.isQuickCaptureOpen) {
+              uiStore.closeQuickCapture();
+          }
+      }
+
+      // Batch mode toggle
+      if (e.key.toLowerCase() === 'b' && !modifier) {
+          e.preventDefault();
+          appStore.toggleBatchMode();
       }
 
       if (!modifier) return;
@@ -97,7 +111,7 @@
               break;
           case 'k':
               e.preventDefault();
-              uiStore.openSearch();
+              uiStore.openQuickCapture();
               break;
       }
   }
@@ -155,4 +169,10 @@
   />
 
   <PomodoroTimer />
+
+  <QuickCapture />
+  
+  <UndoToast />
+  
+  <BatchActionsToolbar />
 {/if}

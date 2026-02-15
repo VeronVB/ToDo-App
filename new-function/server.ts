@@ -34,13 +34,9 @@ await fastify.register(jwt, {
 
 // Auth Hook
 fastify.addHook('onRequest', async (request, reply) => {
-  // Always allow OPTIONS (CORS preflight) and health check
   if (request.method === 'OPTIONS' || request.routeOptions.url === '/health') return;
-
   const ip = request.ip;
-  // Localhost bypass
   if (ip === '127.0.0.1' || ip === '::1' || ip === 'localhost') return;
-
   try {
     await request.jwtVerify();
   } catch (err) {
@@ -50,15 +46,15 @@ fastify.addHook('onRequest', async (request, reply) => {
 
 // CORS
 await fastify.register(cors, {
-  origin: process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:5173' 
+  origin: process.env.NODE_ENV === 'development'
+    ? 'http://localhost:5173'
     : true
 });
 
 // Health check
 fastify.get('/health', async () => {
-  return { 
-    status: 'ok', 
+  return {
+    status: 'ok',
     timestamp: new Date().toISOString(),
     database: db.open ? 'connected' : 'disconnected'
   };
@@ -82,9 +78,7 @@ const start = async () => {
   try {
     const port = Number(process.env.PORT) || 3000;
     const host = process.env.HOST || '0.0.0.0';
-    
     await fastify.listen({ port, host });
-    
     console.log('');
     console.log('🚀 Backend Server Ready!');
     console.log(`📍 URL: http://localhost:${port}`);

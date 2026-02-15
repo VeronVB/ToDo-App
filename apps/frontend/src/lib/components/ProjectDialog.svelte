@@ -11,7 +11,7 @@
   interface Props {
       open: boolean;
       onOpenChange: (open: boolean) => void;
-      project: { id: string, name: string } | null;
+      project: { id: string | number, name: string } | null;
   }
 
   let { open, onOpenChange, project }: Props = $props();
@@ -30,7 +30,7 @@
       if (!name) return;
 
       if (project) {
-          projectsStore.updateProject(project.id, name);
+          projectsStore.updateProject(Number(project.id), name);
       } else {
           projectsStore.addProject(name);
       }
@@ -46,16 +46,10 @@
           }
       }
 
-      // Delete tasks associated with this project (assuming categoryId maps to project ID)
-      // We need to find tasks where categoryId matches project.id
-      // Since tasksStore uses numeric categoryId usually, but we are using string IDs for mock projects...
-      // Let's assume for this mock implementation that categoryId string matches or we filter by string comparison if stored as such.
-      // In a real app, IDs would be consistent.
-      
       const tasksToDelete = tasksStore.tasks.filter(t => t.categoryId?.toString() === project!.id || t.project === project!.id);
       tasksToDelete.forEach(t => tasksStore.deleteTask(t.id));
 
-      projectsStore.deleteProject(project.id);
+      projectsStore.deleteProject(Number(project.id));
       onOpenChange(false);
   }
 </script>

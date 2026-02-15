@@ -268,5 +268,150 @@
     "help": "Help & Support"
   },
   "search": { "placeholder": "Search tasks...", "no_results": "No results found.", "type_to_search": "Type to search...", "searching": "Searching...", "tasks": "Tasks" },
-  "timer": { "start_focus": "Start Focus", "focus": "Focus", "short_break": "Short Break", "long_break": "Long Break", "ready": "Ready", "pause": "Pause", "resume": "Resume", "stop": "Stop", "skip": "Skip to next", "session": "Session" }
+  "timer": { "start_focus": "Start Focus", "focus": "Focus", "short_break": "Short Break", "long_break": "Long Break", "ready": "Ready", "pause": "Pause", "resume": "Resume", "stop": "Stop", "skip": "Skip to next", "session": "Session" },
+  "sidebar_advanced": {
+    "tools": "Tools",
+    "matrix": "Eisenhower Matrix",
+    "kanban": "Kanban Board",
+    "briefing": "Morning Briefing",
+    "dashboard": "Dashboard",
+    "focus": "Focus Mode",
+    "review": "Weekly Review",
+    "templates": "Templates",
+    "filters": "Saved Filters",
+    "activity": "Activity Log",
+    "import_export": "Import/Export"
+  },
+  "matrix": {
+    "title": "Eisenhower Matrix",
+    "do_first": "Do First",
+    "schedule": "Schedule",
+    "delegate": "Delegate",
+    "eliminate": "Eliminate",
+    "urgent": "Urgent",
+    "not_urgent": "Not Urgent",
+    "important": "Important",
+    "not_important": "Not Important"
+  },
+  "kanban": {
+    "title": "Kanban Board",
+    "todo": "To Do",
+    "in_progress": "In Progress",
+    "done": "Done"
+  },
+  "briefing": {
+    "title": "Morning Briefing",
+    "greeting_morning": "Good morning!",
+    "greeting_afternoon": "Good afternoon!",
+    "greeting_evening": "Good evening!",
+    "overdue": "Overdue",
+    "due_today": "Due Today",
+    "upcoming": "Upcoming",
+    "completed_yesterday": "Completed Yesterday",
+    "completed_this_week": "This Week",
+    "total_active": "Total Active",
+    "habits_pending": "Habits Pending"
+  },
+  "dashboard": {
+    "title": "Productivity Dashboard",
+    "total_completed": "Total Completed",
+    "total_created": "Total Created",
+    "total_active": "Active Tasks",
+    "current_streak": "Current Streak",
+    "busiest_day": "Busiest Day",
+    "completion_rate": "Completion Rate",
+    "last_30_days": "Last 30 Days"
+  },
+  "focus": {
+    "title": "Focus Mode",
+    "start": "Start",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "skip": "Skip",
+    "sessions": "Sessions",
+    "pomodoro": "Pomodoro",
+    "short_break": "Short Break",
+    "long_break": "Long Break"
+  },
+  "review": {
+    "title": "Weekly Review",
+    "step1": "Review Completed Tasks",
+    "step2": "Review Overdue Tasks",
+    "step3": "Plan Next Week",
+    "step4": "Celebrate Wins",
+    "no_completed": "No completed tasks this week",
+    "no_overdue": "No overdue tasks"
+  },
+  "templates": {
+    "title": "Task Templates",
+    "create": "Create Template",
+    "use": "Use Template",
+    "delete": "Delete",
+    "no_templates": "No templates yet",
+    "create_first": "Create your first template to quickly generate tasks"
+  },
+  "filters": {
+    "title": "Saved Filters",
+    "create": "Create Filter",
+    "delete": "Delete",
+    "no_filters": "No saved filters",
+    "create_first": "Create a filter to save your custom views"
+  },
+  "activity": {
+    "title": "Activity Log",
+    "no_activity": "No activity yet",
+    "created": "created",
+    "completed": "completed",
+    "uncompleted": "uncompleted",
+    "edited": "edited",
+    "deleted": "deleted",
+    "moved": "moved",
+    "dependency_added": "dependency added",
+    "dependency_removed": "dependency removed"
+  },
+  "import_export": {
+    "title": "Import / Export",
+    "export_data": "Export Data",
+    "import_data": "Import Data",
+    "export_desc": "Download all your tasks, projects, and settings as JSON",
+    "import_desc": "Restore from a previous export",
+    "import_success": "Successfully imported {count} tasks",
+    "last_export": "Last export"
+  },
+  "quick_capture": {
+    "placeholder": "Quick add task... (Press Enter to add)",
+    "hint": "Use @project #tag !priority dates like tomorrow"
+  },
+  "batch_actions": {
+    "complete": "Complete",
+    "delete": "Delete",
+    "move": "Move to Project",
+    "priority": "Change Priority",
+    "select_all": "Select All",
+    "clear_selection": "Clear Selection"
+  },
+  "undo": {
+    "undone": "Undone",
+    "task_restored": "Task restored",
+    "undo": "Undo"
+  },
+  "dependencies": {
+    "title": "Dependencies",
+    "blocked_by": "Blocked by",
+    "blocks": "Blocks",
+    "add_dependency": "Add Dependency",
+    "remove_dependency": "Remove",
+    "circular_error": "Cannot add: would create circular dependency",
+    "search_task": "Search for task..."
+  },
+  "reminders": {
+    "title": "Reminders",
+    "add": "Add Reminder",
+    "in_30_min": "In 30 minutes",
+    "in_1_hour": "In 1 hour",
+    "in_3_hours": "In 3 hours",
+    "tomorrow": "Tomorrow morning",
+    "custom": "Custom"
+  }
 }

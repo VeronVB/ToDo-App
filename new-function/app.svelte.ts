@@ -9,9 +9,11 @@ class AppStore {
 	selectedTag = $state<string | null>(null);
 	selectedFilterId = $state<number | null>(null);
 
+	// Batch selection mode
 	batchMode = $state(false);
 	selectedTaskIds = $state<Set<number>>(new Set());
 
+	// Sidebar mobile toggle
 	sidebarOpen = $state(false);
 
 	setView(view: ViewType) {
@@ -50,6 +52,7 @@ class AppStore {
 		this.sidebarOpen = false;
 	}
 
+	// Batch mode
 	toggleBatchMode() {
 		this.batchMode = !this.batchMode;
 		if (!this.batchMode) this.selectedTaskIds = new Set();

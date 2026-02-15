@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inbox, Calendar, Archive, CheckSquare, Folder, Plus, Pencil, Hash, Flame, ChevronDown, ChevronRight, MoreHorizontal, Tag } from '@lucide/svelte';
+  import { Inbox, Calendar, Archive, CheckSquare, Folder, Plus, Pencil, Hash, Flame, ChevronDown, ChevronRight, MoreHorizontal, Tag, LayoutGrid, Columns, Sunrise, BarChart3, Focus, CalendarRange, FileText, Filter, Activity, Import, Wrench } from '@lucide/svelte';
   import { Button } from '$lib/components/ui/button';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import { Separator } from '$lib/components/ui/separator';
@@ -115,6 +115,90 @@
         <Archive class="mr-2 h-4 w-4" />
         {$t('sidebar.logbook')}
       </Button>
+
+      <Separator class="my-2" />
+
+      <!-- ═══ Tools Section ═══ -->
+      <div class="mb-2">
+        <h3 class="px-2 py-1.5 text-xs font-semibold text-muted-foreground tracking-wider uppercase">
+          {$t('sidebar_advanced.tools')}
+        </h3>
+        <nav class="grid gap-0.5">
+          <Button
+            variant={appStore.currentView === 'dashboard' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('dashboard')}
+          >
+            <BarChart3 class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.dashboard')}
+          </Button>
+          <Button
+            variant={appStore.currentView === 'briefing' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('briefing')}
+          >
+            <Sunrise class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.briefing')}
+          </Button>
+          <Button
+            variant={appStore.currentView === 'matrix' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('matrix')}
+          >
+            <LayoutGrid class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.matrix')}
+          </Button>
+          <Button
+            variant={appStore.currentView === 'kanban' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('kanban')}
+          >
+            <Columns class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.kanban')}
+          </Button>
+          <Button
+            variant={appStore.currentView === 'focus' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('focus')}
+          >
+            <Focus class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.focus')}
+          </Button>
+          <Button
+            variant={appStore.currentView === 'review' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('review')}
+          >
+            <CalendarRange class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.review')}
+          </Button>
+          <Separator class="my-1" />
+          <Button
+            variant={appStore.currentView === 'templates' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('templates')}
+          >
+            <FileText class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.templates')}
+          </Button>
+          <Button
+            variant={appStore.currentView === 'filter' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('filter')}
+          >
+            <Filter class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.filters')}
+          </Button>
+          <Button
+            variant={appStore.currentView === 'activity' ? "secondary" : "ghost"}
+            class="justify-start px-2 font-normal text-sm"
+            onclick={() => appStore.setView('activity')}
+          >
+            <Activity class="mr-2 h-4 w-4" />
+            {$t('sidebar_advanced.activity')}
+          </Button>
+        </nav>
+      </div>
     </nav>
 
     <div class="px-2 shrink-0">
@@ -164,7 +248,7 @@
                     class="absolute right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
                     onclick={(e) => {
                       e.stopPropagation();
-                      uiStore.openEditProject(project);
+                      uiStore.openEditProject({ id: project.id, name: project.name });
                     }}
                   >
                     <Pencil class="h-3 w-3 text-muted-foreground" />
