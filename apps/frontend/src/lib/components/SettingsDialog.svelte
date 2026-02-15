@@ -7,12 +7,13 @@
   import { Switch } from '$lib/components/ui/switch';
   import * as RadioGroup from '$lib/components/ui/radio-group';
   import { settingsStore } from '$lib/stores/settings.svelte';
-  import type { ThemeType, LayoutType, LanguageType, IApiToken } from 'shared';
+  import type { ThemeType, LayoutType, LanguageType, IApiToken, SidebarTagsStyle, SidebarHabitWidget } from 'shared';
   import { t } from 'svelte-i18n';
   import * as api from '$lib/api/client';
-  import { Copy, Plus, Trash2, Key, Check } from '@lucide/svelte';
+  import { Copy, Plus, Trash2, Key, Check, List, Grid3x3, ChevronDown, MoreHorizontal, Tag, Flame, Minimize2, Minus, EyeOff } from '@lucide/svelte';
   import { Input } from '$lib/components/ui/input';
   import * as Alert from '$lib/components/ui/alert';
+  import { Separator } from '$lib/components/ui/separator';
 
   interface Props {
       open: boolean;
@@ -69,6 +70,23 @@
   function handleSave() {
      onOpenChange(false);
   }
+
+  // Tags style options
+  const tagsStyleOptions: { value: SidebarTagsStyle; icon: any; label: string; desc: string }[] = [
+    { value: 'list', icon: List, label: 'settings.sidebar.tags_list', desc: 'settings.sidebar.tags_list_desc' },
+    { value: 'chips', icon: Grid3x3, label: 'settings.sidebar.tags_chips', desc: 'settings.sidebar.tags_chips_desc' },
+    { value: 'chips-collapsible', icon: ChevronDown, label: 'settings.sidebar.tags_chips_collapsible', desc: 'settings.sidebar.tags_chips_collapsible_desc' },
+    { value: 'popover', icon: MoreHorizontal, label: 'settings.sidebar.tags_popover', desc: 'settings.sidebar.tags_popover_desc' },
+    { value: 'chips-limited', icon: Tag, label: 'settings.sidebar.tags_limited', desc: 'settings.sidebar.tags_limited_desc' },
+  ];
+
+  // Habit widget size options
+  const habitWidgetOptions: { value: SidebarHabitWidget; icon: any; label: string; desc: string }[] = [
+    { value: 'full', icon: Flame, label: 'settings.sidebar.habit_full', desc: 'settings.sidebar.habit_full_desc' },
+    { value: 'mini', icon: Minimize2, label: 'settings.sidebar.habit_mini', desc: 'settings.sidebar.habit_mini_desc' },
+    { value: 'micro', icon: Minus, label: 'settings.sidebar.habit_micro', desc: 'settings.sidebar.habit_micro_desc' },
+    { value: 'off', icon: EyeOff, label: 'settings.sidebar.habit_off', desc: 'settings.sidebar.habit_off_desc' },
+  ];
 </script>
 
 <Dialog.Root {open} {onOpenChange}>
@@ -79,12 +97,14 @@
     </Dialog.Header>
     
     <Tabs.Root value={currentTab} onValueChange={handleTabChange} class="w-full">
-      <Tabs.List class="grid w-full grid-cols-3">
+      <Tabs.List class="grid w-full grid-cols-4">
         <Tabs.Trigger value="general">{$t('settings.tabs.general')}</Tabs.Trigger>
         <Tabs.Trigger value="appearance">{$t('settings.tabs.appearance')}</Tabs.Trigger>
+        <Tabs.Trigger value="sidebar">{$t('settings.tabs.sidebar')}</Tabs.Trigger>
         <Tabs.Trigger value="api">{$t('settings.tabs.api')}</Tabs.Trigger>
       </Tabs.List>
       
+      <!-- ═══ GENERAL TAB ═══ -->
       <Tabs.Content value="general" class="space-y-4 py-4">
          <div class="grid gap-2">
            <Label>{$t('settings.language')}</Label>
@@ -93,7 +113,7 @@
                  {settingsStore.settings.language === 'pl' ? 'Polski' : 'English'}
               </Select.Trigger>
               <Select.Content>
-<Select.Item value="en">{$t('settings.languages.en')}</Select.Item>
+                  <Select.Item value="en">{$t('settings.languages.en')}</Select.Item>
                   <Select.Item value="pl">{$t('settings.languages.pl')}</Select.Item>
               </Select.Content>
            </Select.Root>
@@ -137,6 +157,7 @@
          </div>
       </Tabs.Content>
       
+      <!-- ═══ APPEARANCE TAB ═══ -->
       <Tabs.Content value="appearance" class="space-y-6 py-4">
          <div class="space-y-2">
              <Label>{$t('settings.theme')}</Label>
@@ -182,7 +203,7 @@
                      <span>{settingsStore.settings.themeColor}</span>
                   </div>
                </Select.Trigger>
-<Select.Content class="max-h-[200px]">
+               <Select.Content class="max-h-[200px]">
                    {#each ['neutral', 'red', 'orange', 'green', 'blue', 'yellow', 'violet'] as color}
                       <Select.Item value={color} class="flex items-center gap-2 capitalize">
                           <span class={`theme-${color} flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-black/10 dark:border-white/10`}>
@@ -210,6 +231,105 @@
           </div>
        </Tabs.Content>
 
+       <!-- ═══ SIDEBAR TAB ═══ -->
+       <Tabs.Content value="sidebar" class="space-y-6 py-4 max-h-[60vh] overflow-y-auto">
+          
+          <!-- Tags Display Style -->
+          <div class="space-y-3">
+            <Label>{$t('settings.sidebar.tags_display')}</Label>
+            <p class="text-xs text-muted-foreground">{$t('settings.sidebar.tags_display_desc')}</p>
+            
+            <div class="grid gap-2">
+              {#each tagsStyleOptions as option}
+                <button
+                  class="flex items-start gap-3 rounded-lg border p-3 text-left transition-all {
+                    settingsStore.settings.sidebarTagsStyle === option.value 
+                      ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
+                      : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
+                  }"
+                  onclick={() => settingsStore.updateSettings({ sidebarTagsStyle: option.value })}
+                >
+                  <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-md {
+                    settingsStore.settings.sidebarTagsStyle === option.value ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                  }">
+                    <svelte:component this={option.icon} class="h-4 w-4" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium">{$t(option.label)}</div>
+                    <div class="text-xs text-muted-foreground mt-0.5">{$t(option.desc)}</div>
+                  </div>
+                  {#if settingsStore.settings.sidebarTagsStyle === option.value}
+                    <Check class="h-4 w-4 text-primary shrink-0 mt-1" />
+                  {/if}
+                </button>
+              {/each}
+            </div>
+          </div>
+          
+          <Separator />
+
+          <!-- Habit Widget Size -->
+          <div class="space-y-3">
+            <Label>{$t('settings.sidebar.habit_widget')}</Label>
+            <p class="text-xs text-muted-foreground">{$t('settings.sidebar.habit_widget_desc')}</p>
+            
+            <div class="grid grid-cols-2 gap-2">
+              {#each habitWidgetOptions as option}
+                <button
+                  class="flex items-center gap-2.5 rounded-lg border p-3 text-left transition-all {
+                    settingsStore.settings.sidebarHabitWidget === option.value 
+                      ? 'border-primary bg-primary/5 ring-1 ring-primary/20' 
+                      : 'border-border hover:border-muted-foreground/30 hover:bg-muted/30'
+                  }"
+                  onclick={() => settingsStore.updateSettings({ sidebarHabitWidget: option.value })}
+                >
+                  <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md {
+                    settingsStore.settings.sidebarHabitWidget === option.value ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
+                  }">
+                    <svelte:component this={option.icon} class="h-3.5 w-3.5" />
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="text-sm font-medium">{$t(option.label)}</div>
+                    <div class="text-[11px] text-muted-foreground">{$t(option.desc)}</div>
+                  </div>
+                </button>
+              {/each}
+            </div>
+          </div>
+
+          <Separator />
+          
+          <!-- Collapsible Sections -->
+          <div class="space-y-3">
+            <Label>{$t('settings.sidebar.sections')}</Label>
+            
+            <div class="flex items-center justify-between space-x-2">
+              <div>
+                <Label for="collapse-projects" class="text-sm">{$t('settings.sidebar.collapsible_projects')}</Label>
+                <p class="text-xs text-muted-foreground">{$t('settings.sidebar.collapsible_projects_desc')}</p>
+              </div>
+              <Switch 
+                id="collapse-projects" 
+                checked={settingsStore.settings.sidebarProjectsCollapsible} 
+                onCheckedChange={(v) => settingsStore.updateSettings({ sidebarProjectsCollapsible: v })}
+              />
+            </div>
+            
+            <div class="flex items-center justify-between space-x-2">
+              <div>
+                <Label for="collapse-tags" class="text-sm">{$t('settings.sidebar.collapsible_tags')}</Label>
+                <p class="text-xs text-muted-foreground">{$t('settings.sidebar.collapsible_tags_desc')}</p>
+              </div>
+              <Switch 
+                id="collapse-tags" 
+                checked={settingsStore.settings.sidebarTagsCollapsible} 
+                onCheckedChange={(v) => settingsStore.updateSettings({ sidebarTagsCollapsible: v })}
+              />
+            </div>
+          </div>
+       </Tabs.Content>
+
+       <!-- ═══ API TAB ═══ -->
        <Tabs.Content value="api" class="space-y-6 py-4">
           <div class="space-y-4">
               <div class="space-y-2">

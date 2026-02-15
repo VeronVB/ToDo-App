@@ -28,7 +28,7 @@
     "themes": {
       "light": "Jasny",
       "dark": "Ciemny",
-      "system": "Systemowy"
+      "system": "System"
     },
     "schemes": {
       "default": "Domyślny",
@@ -47,121 +47,147 @@
     },
     "layouts": {
       "compact": "Kompaktowy",
-      "comfortable": "Wygodny",
-      "spacious": "Luźny"
+      "comfortable": "Komfortowy",
+      "spacious": "Przestronny"
     }
-  },
-  "task_form": {
-    "new_task": "Nowe Zadanie",
-    "edit_task": "Edytuj Zadanie",
-    "title": "Tytuł",
-    "title_placeholder": "Tytuł zadania",
-    "description": "Opis",
-    "description_placeholder": "Opcjonalny opis",
-    "priority": "Priorytet",
-    "priorities": {
-      "low": "Niski",
-      "medium": "Średni",
-      "high": "Wysoki"
-    },
-    "is_habit": "To jest nawyk",
-    "cancel": "Anuluj",
-    "save": "Zapisz"
   },
   "cheatsheet": {
     "input": "Wejście:",
-    "parsed": "Przetworzone:"
+    "parsed": "Wynik:"
   },
   "sidebar": {
     "inbox": "Skrzynka",
     "today": "Dzisiaj",
     "upcoming": "Nadchodzące",
-    "anytime": "W każdej chwili",
-    "someday": "Kiedyś",
+    "anytime": "Kiedykolwiek",
+    "someday": "Pewnego dnia",
     "logbook": "Dziennik",
     "habits": "Nawyki",
-    "projects": "PROJEKTY"
+    "projects": "PROJEKTY",
+    "select_tag": "Wybierz tag",
+    "show_less": "Pokaż mniej"
   },
   "habits": {
     "title": "Nawyki",
     "tag": "nawyk",
     "no_habits": "Brak nawyków",
-    "create_first": "Utwórz nawyk ze swoich zadań, aby zacząć śledzić postępy!",
+    "create_first": "Utwórz nawyk oznaczając zadanie jako nawyk — potem śledź swoje serie i regularność tutaj.",
     "day_streak": "dni z rzędu",
     "days": "dni",
     "today": "Dzisiaj",
     "yesterday": "Wczoraj",
     "this_week": "Ten tydzień",
     "this_year": "Ten rok",
-    "active_habits": "Aktywne nawyki",
+    "active_habits": "Aktywne",
     "total": "Łącznie",
-    "best_streak": "Najlepszy streak",
+    "best_streak": "Najlepszy",
     "last_completed": "Ostatnio",
-    "complete": "Zrobione",
-    "done": "Gotowe",
-    "go_to_tasks": "Przejdź do Zadań"
+    "complete": "Gotowe",
+    "done": "Gotowe ✓",
+    "go_to_tasks": "Przejdź do Zadań",
+    "more": "więcej",
+    "less": "Mniej",
+    "all_done_today": "Wszystko zrobione!",
+    "contribution_graph": "Wykres aktywności",
+    "show_all": "Pokaż wszystkie",
+    "weekly_overview": "Ten tydzień",
+    "habit_name": "Nawyk",
+    "streak_short": "Seria",
+    "details": "Szczegóły",
+    "completion_rate": "Wskaźnik realizacji"
   },
   "tasks": {
     "add_task": "Dodaj Zadanie",
     "add_subtask": "Dodaj Podzadanie",
-    "no_tasks": "Brak zadań. Ciesz się dniem!",
+    "no_tasks": "Brak zadań. Miłego dnia!",
     "all_done": "Wszystko zrobione!",
     "empty": {
-      "inbox": "Twoja skrzynka jest pusta! 🎉",
-      "today": "Brak zadań na dzisiaj. Ciesz się dniem!",
-      "upcoming": "Brak nadchodzących zadań.",
-      "logbook": "Brak ukończonych zadań. Zacznij działać!",
-      "default": "Nie znaleziono zadań."
+      "inbox": "Skrzynka pusta! 🎉",
+      "today": "Brak zadań na dziś. Super!",
+      "upcoming": "Brak zaplanowanych zadań.",
+      "logbook": "Brak ukończonych zadań. Zacznij!",
+      "default": "Nie znaleziono zadań.",
+      "tag": "Brak zadań z tym tagiem."
     },
     "confirm_delete_task": "Czy na pewno chcesz usunąć to zadanie?",
-    "clear_history": "Wyczyść Historię",
+    "clear_history": "Wyczyść historię",
     "confirm_clear_history": "Czy na pewno chcesz usunąć wszystkie ukończone zadania?"
   },
   "settings": {
     "title": "Ustawienia",
-    "description": "Zarządzaj swoimi preferencjami.",
+    "description": "Zarządzaj preferencjami.",
     "tabs": {
       "general": "Ogólne",
       "appearance": "Wygląd",
+      "sidebar": "Pasek boczny",
       "api": "API"
     },
+    "sidebar": {
+      "habit_widget": "Widget nawyków",
+      "habit_widget_desc": "Wybierz rozmiar trackera nawyków na pasku bocznym.",
+      "habit_full": "Pełny",
+      "habit_full_desc": "Ring, heatmap i szybkie ukończenie",
+      "habit_mini": "Mini",
+      "habit_mini_desc": "Ring i informacja o serii",
+      "habit_micro": "Mikro",
+      "habit_micro_desc": "Jedna linia z serią",
+      "habit_off": "Ukryty",
+      "habit_off_desc": "Całkowicie wyłącz widget",
+      "tags_display": "Styl wyświetlania tagów",
+      "tags_display_desc": "Wybierz jak tagi wyświetlają się na pasku bocznym.",
+      "tags_list": "Pełna lista",
+      "tags_list_desc": "Każdy tag jako przycisk na pełną szerokość, jak projekty.",
+      "tags_chips": "Kompaktowe chipy",
+      "tags_chips_desc": "Tagi jako małe inline badge, zawsze widoczne.",
+      "tags_chips_collapsible": "Zwijane chipy",
+      "tags_chips_collapsible_desc": "Kompaktowe chipy z możliwością zwijania/rozwijania.",
+      "tags_popover": "Menu popover",
+      "tags_popover_desc": "Tagi ukryte za przyciskiem, otwierają się jako dropdown.",
+      "tags_limited": "Ograniczone chipy",
+      "tags_limited_desc": "Pokaż pierwsze 5 tagów, reszta za przyciskiem 'więcej'.",
+      "sections": "Zwijane sekcje",
+      "collapsible_projects": "Zwijane projekty",
+      "collapsible_projects_desc": "Pozwól na zwijanie sekcji projektów.",
+      "collapsible_tags": "Zwijane tagi",
+      "collapsible_tags_desc": "Pozwól na zwijanie sekcji tagów."
+    },
     "api": {
-        "description": "Generuj tokeny API dla zewnętrznego dostępu.",
-        "generate": "Generuj Token",
-        "token_name": "Nazwa Tokenu",
-        "token_placeholder": "np. Aplikacja Mobilna",
-        "generated_title": "Token Wygenerowany",
-        "generated_desc": "Skopiuj token teraz. Nie zobaczysz go ponownie.",
-        "no_tokens": "Brak aktywnych tokenów.",
-        "revoke": "Unieważnij",
-        "confirm_revoke": "Czy na pewno chcesz unieważnić ten token?",
-        "active_tokens": "Aktywne Tokeny",
-        "created_at": "Utworzono:"
+      "description": "Generuj tokeny API do zewnętrznego dostępu.",
+      "generate": "Generuj Token",
+      "token_name": "Nazwa Tokenu",
+      "token_placeholder": "np. Aplikacja Mobilna",
+      "generated_title": "Token Wygenerowany",
+      "generated_desc": "Skopiuj ten token teraz. Nie zobaczysz go ponownie.",
+      "no_tokens": "Brak aktywnych tokenów.",
+      "revoke": "Unieważnij",
+      "confirm_revoke": "Czy na pewno chcesz unieważnić ten token?",
+      "active_tokens": "Aktywne Tokeny",
+      "created_at": "Utworzono:"
     },
     "language": "Język",
     "languages": {
       "en": "Angielski",
       "pl": "Polski"
     },
-    "confirm_deletions": "Potwierdzaj usuwanie",
+    "confirm_deletions": "Potwierdzaj usunięcia",
     "theme": "Motyw",
     "themes": {
       "light": "Jasny",
       "dark": "Ciemny",
-      "system": "Systemowy"
+      "system": "System"
     },
-    "accent_color": "Kolor Wiodący",
-    "shortcuts_scheme": "Układ Skrótów",
-    "default_due_date": "Domyślny termin",
+    "accent_color": "Kolor akcentu",
+    "shortcuts_scheme": "Schemat Skrótów",
+    "default_due_date": "Domyślna data wykonania",
     "due_dates": {
-        "none": "Brak (Skrzynka)",
-        "today": "Dzisiaj"
+      "none": "Brak (Skrzynka)",
+      "today": "Dzisiaj"
     },
-    "layout_density": "Gęstość układu",
+    "layout_density": "Gęstość Układu",
     "densities": {
       "compact": "Kompaktowy",
-      "comfortable": "Wygodny",
-      "spacious": "Luźny"
+      "comfortable": "Komfortowy",
+      "spacious": "Przestronny"
     },
     "done": "Gotowe"
   },
@@ -173,47 +199,32 @@
       "features": "Funkcje"
     },
     "shortcuts": {
-        "general": "Ogólne",
-        "navigation": "Nawigacja",
-        "task_actions": "Akcje Zadań",
-        "add_new_task": "Dodaj nowe zadanie",
-        "search": "Szukaj",
-        "focus_search": "Aktywuj szukanie",
-        "close_dialog": "Zamknij okno",
-        "go_to_inbox": "Idź do Skrzynki",
-        "go_to_today": "Idź do Dzisiaj",
-        "go_to_upcoming": "Idź do Nadchodzących",
-        "go_to_logbook": "Idź do Dziennika",
-        "edit_task": "Edytuj zadanie",
-        "delete_task": "Usuń zadanie",
-        "toggle_complete": "Oznacz jako wykonane",
-        "schedule_task": "Zaplanuj zadanie"
+      "general": "Ogólne",
+      "navigation": "Nawigacja",
+      "task_actions": "Akcje Zadań",
+      "add_new_task": "Dodaj nowe zadanie",
+      "search": "Szukaj",
+      "focus_search": "Fokus na wyszukiwarkę",
+      "close_dialog": "Zamknij dialog",
+      "go_to_inbox": "Idź do Skrzynki",
+      "go_to_today": "Idź do Dzisiaj",
+      "go_to_upcoming": "Idź do Nadchodzące",
+      "go_to_logbook": "Idź do Dziennika",
+      "edit_task": "Edytuj zadanie",
+      "delete_task": "Usuń zadanie",
+      "toggle_complete": "Przełącz ukończone",
+      "schedule_task": "Zaplanuj zadanie"
     },
     "quick_add": {
-        "title": "Wprowadzanie Naturalne",
-        "description": "Pisz naturalnie, a my rozpoznamy daty, projekty i priorytety"
+      "title": "Wprowadzanie Językiem Naturalnym",
+      "description": "Pisz naturalnie, a my sparsujemy daty, projekty i priorytety"
     },
     "features": {
-        "subtasks": {
-            "title": "Podzadania i Sekcje",
-            "desc": "Rozbijaj złożone zadania na mniejsze kroki."
-        },
-        "recurring": {
-            "title": "Zadania Cykliczne",
-            "desc": "Ustawiaj powtarzanie codziennie, co tydzień, co miesiąc."
-        },
-        "tracking": {
-            "title": "Śledzenie Czasu",
-            "desc": "Śledź czas spędzony nad zadaniami."
-        },
-        "filters": {
-            "title": "Inteligentne Filtry",
-            "desc": "Twórz własne widoki dostosowane do pracy."
-        },
-        "themes": {
-            "title": "Motywy i Wygląd",
-            "desc": "Dostosuj wygląd aplikacji do siebie."
-        }
+      "subtasks": { "title": "Podzadania i Sekcje", "desc": "Rozbij złożone zadania na zarządzalne kroki." },
+      "recurring": { "title": "Zadania Cykliczne", "desc": "Ustaw zadania powtarzające się codziennie, tygodniowo, miesięcznie." },
+      "tracking": { "title": "Śledzenie Czasu", "desc": "Śledź czas poświęcony na zadania." },
+      "filters": { "title": "Inteligentne Filtry", "desc": "Twórz niestandardowe widoki dla swojego przepływu pracy." },
+      "themes": { "title": "Motywy i Wygląd", "desc": "Dostosuj wygląd i odczucia." }
     }
   },
   "task_form": {
@@ -221,7 +232,7 @@
     "edit_title": "Edytuj Zadanie",
     "description": "Utwórz nowe zadanie. Kliknij zapisz gdy skończysz.",
     "title_label": "Tytuł",
-    "title_placeholder": "np. Kupić mleko",
+    "title_placeholder": "np. Kup zakupy",
     "desc_label": "Opis",
     "desc_placeholder": "Dodaj szczegóły...",
     "category_label": "Kategoria",
@@ -229,31 +240,23 @@
     "due_date_label": "Termin",
     "pick_date": "Wybierz datę",
     "priority_label": "Priorytet",
-    "recurrence_label": "Powtarzanie",
-    "recurrence": {
-        "none": "Nigdy",
-        "daily": "Codziennie",
-        "weekly": "Co tydzień",
-        "monthly": "Co miesiąc"
-    },
-    "priorities": {
-        "low": "Niski",
-        "medium": "Średni",
-        "high": "Wysoki"
-    },
+    "recurrence_label": "Powtarzaj",
+    "recurrence": { "none": "Nigdy", "daily": "Codziennie", "weekly": "Tygodniowo", "monthly": "Miesięcznie" },
+    "priorities": { "low": "Niski", "medium": "Średni", "high": "Wysoki" },
     "cancel": "Anuluj",
     "save": "Zapisz Zadanie",
+    "is_habit": "To jest nawyk",
     "nlp_hints": {
-        "0": "Spróbuj: \"Kupić mleko jutro !wysoki @Osobiste\"",
-        "1": "Spróbuj: \"Spotkanie zespołu w piątek @Praca !średni\"",
-        "2": "Spróbuj: \"Zadzwonić do mamy dzisiaj !wysoki\"",
-        "3": "Spróbuj: \"Skończyć raport w przyszłym tygodniu @Praca\"",
-        "4": "Spróbuj: \"Siłownia wieczorem @Osobiste\"",
-        "5": "Spróbuj: \"Zarezerwować loty !średni @Podróże\"",
-        "6": "Spróbuj: \"Opłacić rachunki w poniedziałek !wysoki\"",
-        "7": "Spróbuj: \"Wizyta u dentysty jutro @Zdrowie\"",
-        "8": "Spróbuj: \"Przegląd tygodniowy !niski @Praca\"",
-        "9": "Spróbuj: \"Serwis samochodu w przyszłym miesiącu @Auto\""
+      "0": "Spróbuj: \"Kup mleko jutro !high @Osobiste\"",
+      "1": "Spróbuj: \"Spotkanie w piątek @Praca !medium\"",
+      "2": "Spróbuj: \"Zadzwoń do mamy dziś !high\"",
+      "3": "Spróbuj: \"Dokończ raport w przyszłym tygodniu @Praca\"",
+      "4": "Spróbuj: \"Siłownia wieczorem @Osobiste\"",
+      "5": "Spróbuj: \"Zarezerwuj loty !medium @Podróże\"",
+      "6": "Spróbuj: \"Zapłać rachunki w poniedziałek !high\"",
+      "7": "Spróbuj: \"Dentysta jutro @Zdrowie\"",
+      "8": "Spróbuj: \"Przegląd tygodniowy !low @Praca\"",
+      "9": "Spróbuj: \"Serwis auta w przyszłym miesiącu @Auto\""
     }
   },
   "menu": {
@@ -263,23 +266,6 @@
     "appearance": "Wygląd",
     "help": "Pomoc i Wsparcie"
   },
-  "search": {
-      "placeholder": "Szukaj zadań...",
-      "no_results": "Brak wyników.",
-      "type_to_search": "Zacznij pisać...",
-      "searching": "Szukanie...",
-      "tasks": "Zadania"
-  },
-  "timer": {
-    "start_focus": "Rozpocznij Fokus",
-    "focus": "Fokus",
-    "short_break": "Krótka Przerwa",
-    "long_break": "Długa Przerwa",
-    "ready": "Gotowy",
-    "pause": "Pauza",
-    "resume": "Wznów",
-    "stop": "Zatrzymaj",
-    "skip": "Pomiń do następnej",
-    "session": "Sesja"
-  }
+  "search": { "placeholder": "Szukaj zadań...", "no_results": "Brak wyników.", "type_to_search": "Wpisz aby szukać...", "searching": "Szukanie...", "tasks": "Zadania" },
+  "timer": { "start_focus": "Rozpocznij Focus", "focus": "Focus", "short_break": "Krótka Przerwa", "long_break": "Długa Przerwa", "ready": "Gotowy", "pause": "Pauza", "resume": "Wznów", "stop": "Stop", "skip": "Pomiń", "session": "Sesja" }
 }

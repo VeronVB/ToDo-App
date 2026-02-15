@@ -13,7 +13,7 @@ export interface ITask {
   position: number;
   depth: number;
   dueDate?: string;
-  recurrence?: 'none' | 'daily' | 'weekly' | 'monthly'; // Added recurrence
+  recurrence?: 'none' | 'daily' | 'weekly' | 'monthly';
   pendingParentCompletion?: boolean;
   isHabit?: boolean;
   createdAt: string;
@@ -22,7 +22,8 @@ export interface ITask {
   // Computed (nie w DB)
   children?: ITask[];
   progress?: number;
-  project?: string; // Optional project name/id mapping for frontend convenience
+  project?: string;
+  tags?: ITag[];
 }
 
 export interface ICategory {
@@ -40,30 +41,6 @@ export interface ITag {
   createdAt: string;
 }
 
-export interface ITask {
-  id: number;
-  title: string;
-  description?: string;
-  completed: boolean;
-  priority: 'low' | 'medium' | 'high';
-  categoryId?: number;
-  parentId?: number;
-  position: number;
-  depth: number;
-  dueDate?: string;
-  recurrence?: 'none' | 'daily' | 'weekly' | 'monthly';
-  pendingParentCompletion?: boolean;
-  createdAt: string;
-  updatedAt: string;
-  
-  // Computed (nie w DB)
-  children?: ITask[];
-  progress?: number;
-  project?: string;
-  tags?: ITag[];
-}
-
-
 export interface IPriority {
   id: number;
   name: string;
@@ -71,6 +48,9 @@ export interface IPriority {
   color: string;
   createdAt: string;
 }
+
+export type SidebarTagsStyle = 'list' | 'chips' | 'chips-collapsible' | 'popover' | 'chips-limited';
+export type SidebarHabitWidget = 'full' | 'mini' | 'micro' | 'off';
 
 export interface ISettings {
   id: number;
@@ -83,6 +63,10 @@ export interface ISettings {
   shortcutScheme: 'default' | 'windows' | 'mac' | 'linux';
   themeColor: 'neutral' | 'red' | 'orange' | 'green' | 'blue' | 'yellow' | 'violet';
   defaultDueDate: 'none' | 'today';
+  sidebarTagsStyle: SidebarTagsStyle;
+  sidebarProjectsCollapsible: boolean;
+  sidebarTagsCollapsible: boolean;
+  sidebarHabitWidget: SidebarHabitWidget;
   createdAt: string;
   updatedAt: string;
 }
@@ -92,7 +76,7 @@ export interface ITimeEntry {
   taskId: number;
   startTime: string;
   endTime?: string;
-  duration?: number; // seconds
+  duration?: number;
   notes?: string;
   createdAt: string;
   isRunning?: boolean;
@@ -118,7 +102,11 @@ export const DEFAULT_SETTINGS: Omit<ISettings, 'id' | 'userId' | 'createdAt' | '
   confirmDelete: true,
   shortcutScheme: 'default',
   themeColor: 'neutral',
-  defaultDueDate: 'none'
+  defaultDueDate: 'none',
+  sidebarTagsStyle: 'chips-collapsible',
+  sidebarProjectsCollapsible: true,
+  sidebarTagsCollapsible: true,
+  sidebarHabitWidget: 'full'
 };
 
 export const PRIORITY_COLORS: Record<PriorityLevel, string> = {

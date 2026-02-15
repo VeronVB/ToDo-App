@@ -51,28 +51,11 @@
       "spacious": "Spacious"
     }
   },
-  "task_form": {
-    "new_task": "New Task",
-    "edit_task": "Edit Task",
-    "title": "Title",
-    "title_placeholder": "Task title",
-    "description": "Description",
-    "description_placeholder": "Optional description",
-    "priority": "Priority",
-    "priorities": {
-      "low": "Low",
-      "medium": "Medium",
-      "high": "High"
-    },
-    "is_habit": "This is a habit",
-    "cancel": "Cancel",
-    "save": "Save"
-  },
   "cheatsheet": {
     "input": "Input:",
     "parsed": "Parsed:"
   },
-"sidebar": {
+  "sidebar": {
     "inbox": "Inbox",
     "today": "Today",
     "upcoming": "Upcoming",
@@ -80,26 +63,38 @@
     "someday": "Someday",
     "logbook": "Logbook",
     "habits": "Habits",
-    "projects": "PROJECTS"
+    "projects": "PROJECTS",
+    "select_tag": "Select a tag",
+    "show_less": "Show less"
   },
   "habits": {
     "title": "Habits",
-    "tag": "habbit",
+    "tag": "habit",
     "no_habits": "No habits yet",
-    "create_first": "Create a habit from your tasks to start tracking!",
+    "create_first": "Create a habit by marking a task as habit — then track your streaks and consistency here.",
     "day_streak": "day streak",
     "days": "days",
     "today": "Today",
     "yesterday": "Yesterday",
     "this_week": "This week",
     "this_year": "This year",
-    "active_habits": "Active Habits",
+    "active_habits": "Active",
     "total": "Total",
-    "best_streak": "Best streak",
+    "best_streak": "Best",
     "last_completed": "Last",
-    "complete": "Complete",
-    "done": "Done",
-    "go_to_tasks": "Go to Tasks"
+    "complete": "Done",
+    "done": "Done ✓",
+    "go_to_tasks": "Go to Tasks",
+    "more": "more",
+    "less": "Less",
+    "all_done_today": "All done today!",
+    "contribution_graph": "Contribution Graph",
+    "show_all": "Show all",
+    "weekly_overview": "This Week",
+    "habit_name": "Habit",
+    "streak_short": "Streak",
+    "details": "Details",
+    "completion_rate": "Completion Rate"
   },
   "tasks": {
     "add_task": "Add Task",
@@ -111,7 +106,8 @@
       "today": "No tasks for today. Enjoy!",
       "upcoming": "No upcoming tasks scheduled.",
       "logbook": "No completed tasks yet. Get started!",
-      "default": "No tasks found."
+      "default": "No tasks found.",
+      "tag": "No tasks with this tag."
     },
     "confirm_delete_task": "Are you sure you want to delete this task?",
     "clear_history": "Clear History",
@@ -123,20 +119,51 @@
     "tabs": {
       "general": "General",
       "appearance": "Appearance",
+      "sidebar": "Sidebar",
       "api": "API"
     },
+    "sidebar": {
+      "habit_widget": "Habits Widget",
+      "habit_widget_desc": "Choose the size of the habits tracker in the sidebar.",
+      "habit_full": "Full",
+      "habit_full_desc": "Ring, heatmap & quick-complete",
+      "habit_mini": "Mini",
+      "habit_mini_desc": "Ring & streak info only",
+      "habit_micro": "Micro",
+      "habit_micro_desc": "Single line with streak",
+      "habit_off": "Hidden",
+      "habit_off_desc": "Disable widget completely",
+      "tags_display": "Tags Display Style",
+      "tags_display_desc": "Choose how tags appear in the sidebar.",
+      "tags_list": "Full List",
+      "tags_list_desc": "Each tag as a full-width button, like projects.",
+      "tags_chips": "Compact Chips",
+      "tags_chips_desc": "Tags as small inline badges, always visible.",
+      "tags_chips_collapsible": "Collapsible Chips",
+      "tags_chips_collapsible_desc": "Compact chips with a toggle to show/hide.",
+      "tags_popover": "Popover Menu",
+      "tags_popover_desc": "Tags hidden behind a button, opens as dropdown.",
+      "tags_limited": "Limited Chips",
+      "tags_limited_desc": "Show first 5 tags, rest behind 'more' button.",
+      "sections": "Collapsible Sections",
+      "collapsible_projects": "Collapsible Projects",
+      "collapsible_projects_desc": "Allow collapsing the projects section.",
+      "collapsible_tags": "Collapsible Tags",
+      "collapsible_tags_desc": "Allow collapsing the tags section."
+      
+    },
     "api": {
-        "description": "Generate API tokens for external access.",
-        "generate": "Generate Token",
-        "token_name": "Token Name",
-        "token_placeholder": "e.g. Mobile App",
-        "generated_title": "Token Generated",
-        "generated_desc": "Copy this token now. You won't see it again.",
-        "no_tokens": "No active tokens.",
-        "revoke": "Revoke",
-        "confirm_revoke": "Are you sure you want to revoke this token?",
-        "active_tokens": "Active Tokens",
-        "created_at": "Created:"
+      "description": "Generate API tokens for external access.",
+      "generate": "Generate Token",
+      "token_name": "Token Name",
+      "token_placeholder": "e.g. Mobile App",
+      "generated_title": "Token Generated",
+      "generated_desc": "Copy this token now. You won't see it again.",
+      "no_tokens": "No active tokens.",
+      "revoke": "Revoke",
+      "confirm_revoke": "Are you sure you want to revoke this token?",
+      "active_tokens": "Active Tokens",
+      "created_at": "Created:"
     },
     "language": "Language",
     "languages": {
@@ -154,8 +181,8 @@
     "shortcuts_scheme": "Shortcuts Scheme",
     "default_due_date": "Default Due Date",
     "due_dates": {
-        "none": "None (Inbox)",
-        "today": "Today"
+      "none": "None (Inbox)",
+      "today": "Today"
     },
     "layout_density": "Layout Density",
     "densities": {
@@ -173,47 +200,32 @@
       "features": "Features"
     },
     "shortcuts": {
-        "general": "General",
-        "navigation": "Navigation",
-        "task_actions": "Task Actions",
-        "add_new_task": "Add new task",
-        "search": "Search",
-        "focus_search": "Focus search",
-        "close_dialog": "Close dialog",
-        "go_to_inbox": "Go to Inbox",
-        "go_to_today": "Go to Today",
-        "go_to_upcoming": "Go to Upcoming",
-        "go_to_logbook": "Go to Logbook",
-        "edit_task": "Edit task",
-        "delete_task": "Delete task",
-        "toggle_complete": "Toggle complete",
-        "schedule_task": "Schedule task"
+      "general": "General",
+      "navigation": "Navigation",
+      "task_actions": "Task Actions",
+      "add_new_task": "Add new task",
+      "search": "Search",
+      "focus_search": "Focus search",
+      "close_dialog": "Close dialog",
+      "go_to_inbox": "Go to Inbox",
+      "go_to_today": "Go to Today",
+      "go_to_upcoming": "Go to Upcoming",
+      "go_to_logbook": "Go to Logbook",
+      "edit_task": "Edit task",
+      "delete_task": "Delete task",
+      "toggle_complete": "Toggle complete",
+      "schedule_task": "Schedule task"
     },
     "quick_add": {
-        "title": "Natural Language Input",
-        "description": "Type naturally and we'll parse dates, projects, and priorities"
+      "title": "Natural Language Input",
+      "description": "Type naturally and we'll parse dates, projects, and priorities"
     },
     "features": {
-        "subtasks": {
-            "title": "Subtasks & Sections",
-            "desc": "Break down complex tasks into manageable steps."
-        },
-        "recurring": {
-            "title": "Recurring Tasks",
-            "desc": "Set tasks to repeat daily, weekly, monthly."
-        },
-        "tracking": {
-            "title": "Time Tracking",
-            "desc": "Track time spent on tasks."
-        },
-        "filters": {
-            "title": "Smart Filters",
-            "desc": "Create custom views for your workflow."
-        },
-        "themes": {
-            "title": "Themes & Appearance",
-            "desc": "Customize the look and feel."
-        }
+      "subtasks": { "title": "Subtasks & Sections", "desc": "Break down complex tasks into manageable steps." },
+      "recurring": { "title": "Recurring Tasks", "desc": "Set tasks to repeat daily, weekly, monthly." },
+      "tracking": { "title": "Time Tracking", "desc": "Track time spent on tasks." },
+      "filters": { "title": "Smart Filters", "desc": "Create custom views for your workflow." },
+      "themes": { "title": "Themes & Appearance", "desc": "Customize the look and feel." }
     }
   },
   "task_form": {
@@ -230,30 +242,22 @@
     "pick_date": "Pick a date",
     "priority_label": "Priority",
     "recurrence_label": "Repeat",
-    "recurrence": {
-        "none": "Never",
-        "daily": "Daily",
-        "weekly": "Weekly",
-        "monthly": "Monthly"
-    },
-    "priorities": {
-        "low": "Low",
-        "medium": "Medium",
-        "high": "High"
-    },
+    "recurrence": { "none": "Never", "daily": "Daily", "weekly": "Weekly", "monthly": "Monthly" },
+    "priorities": { "low": "Low", "medium": "Medium", "high": "High" },
     "cancel": "Cancel",
     "save": "Save Task",
+    "is_habit": "This is a habit",
     "nlp_hints": {
-        "0": "Try: \"Buy milk tomorrow !high @Personal\"",
-        "1": "Try: \"Team meeting on Friday @Work !medium\"",
-        "2": "Try: \"Call mom today !high\"",
-        "3": "Try: \"Finish report next week @Work\"",
-        "4": "Try: \"Gym in the evening @Personal\"",
-        "5": "Try: \"Book flights !medium @Travel\"",
-        "6": "Try: \"Pay bills on Monday !high\"",
-        "7": "Try: \"Dentist appointment tomorrow @Health\"",
-        "8": "Try: \"Weekly review !low @Work\"",
-        "9": "Try: \"Car service next month @Auto\""
+      "0": "Try: \"Buy milk tomorrow !high @Personal\"",
+      "1": "Try: \"Team meeting on Friday @Work !medium\"",
+      "2": "Try: \"Call mom today !high\"",
+      "3": "Try: \"Finish report next week @Work\"",
+      "4": "Try: \"Gym in the evening @Personal\"",
+      "5": "Try: \"Book flights !medium @Travel\"",
+      "6": "Try: \"Pay bills on Monday !high\"",
+      "7": "Try: \"Dentist appointment tomorrow @Health\"",
+      "8": "Try: \"Weekly review !low @Work\"",
+      "9": "Try: \"Car service next month @Auto\""
     }
   },
   "menu": {
@@ -263,23 +267,6 @@
     "appearance": "Appearance",
     "help": "Help & Support"
   },
-  "search": {
-      "placeholder": "Search tasks...",
-      "no_results": "No results found.",
-      "type_to_search": "Type to search...",
-      "searching": "Searching...",
-      "tasks": "Tasks"
-  },
-  "timer": {
-    "start_focus": "Start Focus",
-    "focus": "Focus",
-    "short_break": "Short Break",
-    "long_break": "Long Break",
-    "ready": "Ready",
-    "pause": "Pause",
-    "resume": "Resume",
-    "stop": "Stop",
-    "skip": "Skip to next",
-    "session": "Session"
-  }
+  "search": { "placeholder": "Search tasks...", "no_results": "No results found.", "type_to_search": "Type to search...", "searching": "Searching...", "tasks": "Tasks" },
+  "timer": { "start_focus": "Start Focus", "focus": "Focus", "short_break": "Short Break", "long_break": "Long Break", "ready": "Ready", "pause": "Pause", "resume": "Resume", "stop": "Stop", "skip": "Skip to next", "session": "Session" }
 }
