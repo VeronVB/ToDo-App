@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { CheckCircle, Plus, Trash2 } from '@lucide/svelte';
+  import { CheckCircle, Plus, Trash2, Flame, Check, Trophy, Target } from '@lucide/svelte';
   import TaskItem from './TaskItem.svelte';
   import { Button } from '$lib/components/ui/button';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
@@ -8,6 +8,7 @@
   import { tasksStore } from '$lib/stores/tasks.svelte';
   import { projectsStore } from '$lib/stores/projects.svelte';
   import { settingsStore } from '$lib/stores/settings.svelte';
+  import { habitsStore } from '$lib/stores/habits.svelte';
   import { t } from 'svelte-i18n';
   import * as api from '$lib/api/client';
   import type { ITask } from 'shared';
@@ -129,7 +130,8 @@
       inbox: $t('sidebar.inbox'),
       today: $t('sidebar.today'),
       upcoming: $t('sidebar.upcoming'),
-      logbook: $t('sidebar.logbook')
+      logbook: $t('sidebar.logbook'),
+      habits: $t('sidebar.habits')
   });
 
   let title = $derived.by(() => {
@@ -148,7 +150,8 @@
       today: $t('tasks.empty.today'),
       upcoming: $t('tasks.empty.upcoming'),
       logbook: $t('tasks.empty.logbook'),
-      tag: $t('tasks.empty.tag')
+      tag: $t('tasks.empty.tag'),
+      habits: $t('habits.no_habits')
   });
 
   let emptyMessage = $derived(emptyMessages[appStore.currentView as keyof typeof emptyMessages] || $t('tasks.empty.default'));
@@ -224,20 +227,135 @@
           dragDisabled = true;
       }
   });
+  
+  $effect(() => {
+      if (appStore.currentView === 'habits') {
+          habitsStore.fetchHabits();
+          habitsStore.fetchOverview();
+      }
+  });
+  
+  function formatDate(dateStr: string | null): string {
+      if (!dateStr) return 'Never';
+      const date = new Date(dateStr);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      const todayStr = today.toISOString().split('T')[0];
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      
+      if (dateStr === todayStr) return 'Today';
+      if (dateStr === yesterdayStr) return 'Yesterday';
+      
+      return date.toLocaleDateString();
+  }
+  
+  async function handleCompleteHabit(habitId: number) {
+      await habitsStore.completeHabit(habitId);
+  }
 </script>
 
 <div class="flex flex-col h-full">
   <!-- Header -->
   <div class="flex items-center justify-between mb-4">
       <h1 class="text-2xl font-bold">{title}</h1>
-      <Button onclick={onAddTask} size="sm" class="gap-2">
-          <Plus class="h-4 w-4" />
-          {$t('sidebar.add_task')}
-      </Button>
+      {#if appStore.currentView === 'logbook'}
+          <Button onclick={() => tasksStore.clearCompletedTasks()} size="sm" variant="outline" class="gap-2">
+              <Trash2 class="h-4 w-4" />
+              {$t('tasks.clear_history') || 'Wyczyść historię'}
+          </Button>
+      {:else}
+          <Button onclick={onAddTask} size="sm" class="gap-2">
+              <Plus class="h-4 w-4" />
+              {$t('tasks.add_task')}
+          </Button>
+      {/if}
   </div>
 
   <!-- Content -->
-  {#if appStore.currentView !== 'logbook' && !appStore.selectedProject && processedTasks.active.length === 0}
+  {#if appStore.currentView === 'habits'}
+    {#if habitsStore.loading}
+      <div class="flex items-center justify-center py-12">
+        <div class="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      </div>
+    {:else if habitsStore.habits.length === 0}
+      <div class="flex-1 flex items-center justify-center text-muted-foreground">
+        <div class="text-center">
+          <Flame class="h-16 w-16 mx-auto mb-4 opacity-30" />
+          <p>{$t('habits.no_habits')}</p>
+          <p class="text-sm mt-2">{$t('habits.create_first')}</p>
+        </div>
+      </div>
+    {:else}
+      <ScrollArea class="flex-1 -mx-4 px-4">
+        <div class="space-y-4 pb-20">
+          {#if habitsStore.overview}
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+              <div class="rounded-lg border bg-card p-3">
+                <div class="flex items-center gap-1.5 text-muted-foreground mb-1">
+                  <Flame class="h-3 w-3 text-orange-500" />
+                  <span class="text-xs">{$t('habits.day_streak')}</span>
+                </div>
+                <div class="text-xl font-bold">{habitsStore.overview.currentStreak}</div>
+              </div>
+              <div class="rounded-lg border bg-card p-3">
+                <div class="flex items-center gap-1.5 text-muted-foreground mb-1">
+                  <Trophy class="h-3 w-3 text-yellow-500" />
+                  <span class="text-xs">{$t('habits.best_streak')}</span>
+                </div>
+                <div class="text-xl font-bold">{habitsStore.overview.longestStreak}</div>
+              </div>
+              <div class="rounded-lg border bg-card p-3">
+                <div class="flex items-center gap-1.5 text-muted-foreground mb-1">
+                  <Check class="h-3 w-3 text-green-500" />
+                  <span class="text-xs">{$t('habits.this_week')}</span>
+                </div>
+                <div class="text-xl font-bold">{habitsStore.overview.weekCompletions}</div>
+              </div>
+              <div class="rounded-lg border bg-card p-3">
+                <div class="flex items-center gap-1.5 text-muted-foreground mb-1">
+                  <Target class="h-3 w-3 text-blue-500" />
+                  <span class="text-xs">{$t('habits.active_habits')}</span>
+                </div>
+                <div class="text-xl font-bold">{habitsStore.overview.activeHabits}</div>
+              </div>
+            </div>
+          {/if}
+          
+          {#each habitsStore.habits as habit (habit.id)}
+            {@const today = new Date().toISOString().split('T')[0]}
+            {@const isCompletedToday = habit.lastCompletedDate === today}
+            <div class="rounded-lg border bg-card p-4">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <Flame class="h-5 w-5 text-orange-500" />
+                  <span class="font-semibold">{habit.streak}</span>
+                  <span class="text-sm text-muted-foreground">{$t('habits.day_streak')}</span>
+                </div>
+                {#if !isCompletedToday}
+                  <Button size="sm" onclick={() => handleCompleteHabit(habit.id)}>
+                    <Check class="mr-1 h-4 w-4" />
+                    {$t('habits.complete')}
+                  </Button>
+                {:else}
+                  <Button size="sm" variant="secondary" disabled>
+                    <Check class="mr-1 h-4 w-4" />
+                    {$t('habits.done')}
+                  </Button>
+                {/if}
+              </div>
+              <div class="font-medium mb-1">{habit.title}</div>
+              <div class="flex items-center gap-4 text-xs text-muted-foreground">
+                <span>{$t('habits.last_completed')}: {formatDate(habit.lastCompletedDate)}</span>
+                <span>{$t('habits.total')}: {habit.totalCompletions}</span>
+              </div>
+            </div>
+          {/each}
+        </div>
+      </ScrollArea>
+    {/if}
+  {:else if appStore.currentView !== 'logbook' && !appStore.selectedProject && processedTasks.active.length === 0}
       <div class="flex-1 flex items-center justify-center text-muted-foreground">
           <p>{emptyMessage}</p>
       </div>
@@ -250,6 +368,7 @@
                       onToggle={onToggleTask}
                       onDelete={onDeleteTask}
                       onEdit={onEditTask}
+                      isLogbook={appStore.currentView === 'logbook'}
                       
                       draggable={!dragDisabled}
                       dndHandlers={{
@@ -277,6 +396,7 @@
                                   onToggle={onToggleTask}
                                   onDelete={onDeleteTask}
                                   onEdit={onEditTask}
+                                  isLogbook={true}
                                   draggable={false}
                               />
                           {/each}

@@ -93,8 +93,8 @@
                  {settingsStore.settings.language === 'pl' ? 'Polski' : 'English'}
               </Select.Trigger>
               <Select.Content>
-                 <Select.Item value="en">English</Select.Item>
-                 <Select.Item value="pl">Polski</Select.Item>
+<Select.Item value="en">{$t('settings.languages.en')}</Select.Item>
+                  <Select.Item value="pl">{$t('settings.languages.pl')}</Select.Item>
               </Select.Content>
            </Select.Root>
         </div>
@@ -106,10 +106,10 @@
                   {settingsStore.settings.shortcutScheme}
                </Select.Trigger>
                <Select.Content>
-                  <Select.Item value="default">Default</Select.Item>
-                  <Select.Item value="windows">Windows</Select.Item>
-                  <Select.Item value="mac">Mac</Select.Item>
-                  <Select.Item value="linux">Linux</Select.Item>
+                  <Select.Item value="default">{$t('settings_appearance.schemes.default')}</Select.Item>
+                  <Select.Item value="windows">{$t('settings_appearance.schemes.windows')}</Select.Item>
+                  <Select.Item value="mac">{$t('settings_appearance.schemes.mac')}</Select.Item>
+                  <Select.Item value="linux">{$t('settings_appearance.schemes.linux')}</Select.Item>
                </Select.Content>
             </Select.Root>
          </div>
@@ -182,16 +182,16 @@
                      <span>{settingsStore.settings.themeColor}</span>
                   </div>
                </Select.Trigger>
-               <Select.Content class="max-h-[200px]">
-                  {#each ['neutral', 'red', 'orange', 'green', 'blue', 'yellow', 'violet'] as color}
-                     <Select.Item value={color} class="flex items-center gap-2 capitalize">
-                         <span class={`theme-${color} flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-black/10 dark:border-white/10`}>
-                             <span class="h-3 w-3 rounded-full bg-primary"></span>
-                         </span>
-                         <span>{color}</span>
-                     </Select.Item>
-                  {/each}
-               </Select.Content>
+<Select.Content class="max-h-[200px]">
+                   {#each ['neutral', 'red', 'orange', 'green', 'blue', 'yellow', 'violet'] as color}
+                      <Select.Item value={color} class="flex items-center gap-2 capitalize">
+                          <span class={`theme-${color} flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-black/10 dark:border-white/10`}>
+                              <span class="h-3 w-3 rounded-full bg-primary"></span>
+                          </span>
+                          <span>{$t(`settings_appearance.colors.${color}`)}</span>
+                      </Select.Item>
+                   {/each}
+                </Select.Content>
             </Select.Root>
          </div>
 
@@ -219,7 +219,7 @@
                   <div class="flex items-end gap-2">
                       <div class="grid gap-1 flex-1">
                           <Label for="token-name">{$t('settings.api.token_name')}</Label>
-                          <Input id="token-name" bind:value={tokenName} placeholder="e.g. Mobile App" />
+                          <Input id="token-name" bind:value={tokenName} placeholder={$t('settings.api.token_placeholder')} />
                       </div>
                       <Button onclick={handleGenerateToken} disabled={!tokenName}>
                           <Plus class="mr-2 h-4 w-4" />

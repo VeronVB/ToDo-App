@@ -8,6 +8,8 @@ import prioritiesRoutes from './routes/priorities.js';
 import settingsRoutes from './routes/settings.js';
 import authRoutes from './routes/auth.js';
 import tagsRoutes from './routes/tags.js';
+import timeEntriesRoutes from './routes/time_entries.js';
+import habitsRoutes from './routes/habits.js';
 
 const fastify = Fastify({
   logger: {
@@ -66,6 +68,8 @@ fastify.register(prioritiesRoutes);
 fastify.register(settingsRoutes);
 fastify.register(authRoutes);
 fastify.register(tagsRoutes);
+fastify.register(timeEntriesRoutes);
+fastify.register(habitsRoutes);
 
 // Start server
 const start = async () => {

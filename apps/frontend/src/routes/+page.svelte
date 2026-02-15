@@ -61,15 +61,17 @@
 </script>
 
 <svelte:head>
-	<title>{$t('app.title')}</title>
+  <title>{$t('app.title')}</title>
 </svelte:head>
 
-<TaskList 
-  onAddTask={handleAddTask}
-  onToggleTask={handleToggleTask}
-  onDeleteTask={handleDeleteTask}
-  onEditTask={handleEditTask}
-/>
+<div class="h-full max-w-4xl mx-auto p-6">
+  <TaskList 
+    onAddTask={handleAddTask}
+    onToggleTask={handleToggleTask}
+    onDeleteTask={handleDeleteTask}
+    onEditTask={handleEditTask}
+  />
+</div>
 
 <TaskFormDialog 
   open={uiStore.isTaskDialogOpen} 

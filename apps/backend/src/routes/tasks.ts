@@ -15,7 +15,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
       SELECT 
         id, title, description, completed, priority, 
         category_id as categoryId, parent_id as parentId, 
-        position, depth, due_date as dueDate, recurrence,
+        position, depth, due_date as dueDate, recurrence, is_habit as isHabit,
         pending_parent_completion as pendingParentCompletion,
         created_at as createdAt, updated_at as updatedAt 
       FROM tasks 
@@ -126,7 +126,8 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
       parentId: z.number().optional().nullable(),
       dueDate: z.string().optional().nullable(),
       recurrence: z.enum(['none', 'daily', 'weekly', 'monthly']).optional().default('none'),
-      tags: z.array(z.string()).optional()
+      tags: z.array(z.string()).optional(),
+      isHabit: z.boolean().optional().default(false)
     });
 
     const body = CreateTaskSchema.parse(request.body);
@@ -150,8 +151,8 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
         }
 
         const info = db.prepare(`
-          INSERT INTO tasks (title, description, priority, category_id, parent_id, position, depth, due_date, recurrence)
-          VALUES (@title, @description, @priority, @categoryId, @parentId, @position, @depth, @dueDate, @recurrence)
+          INSERT INTO tasks (title, description, priority, category_id, parent_id, position, depth, due_date, recurrence, is_habit)
+          VALUES (@title, @description, @priority, @categoryId, @parentId, @position, @depth, @dueDate, @recurrence, @isHabit)
         `).run({
           title: body.title,
           description: body.description || null,
@@ -161,7 +162,8 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
           position,
           depth,
           dueDate: body.dueDate || null,
-          recurrence: body.recurrence || 'none'
+          recurrence: body.recurrence || 'none',
+          isHabit: body.isHabit ? 1 : 0
         });
 
         const taskId = info.lastInsertRowid as number;
@@ -189,7 +191,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
       SELECT 
         id, title, description, completed, priority, 
         category_id as categoryId, parent_id as parentId, 
-        position, depth, due_date as dueDate, recurrence,
+        position, depth, due_date as dueDate, recurrence, is_habit as isHabit,
         pending_parent_completion as pendingParentCompletion,
         created_at as createdAt, updated_at as updatedAt 
       FROM tasks WHERE id = ?
@@ -223,7 +225,8 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
       categoryId: z.number().optional().nullable(),
       dueDate: z.string().optional().nullable(),
       recurrence: z.enum(['none', 'daily', 'weekly', 'monthly']).optional(),
-      tags: z.array(z.string()).optional()
+      tags: z.array(z.string()).optional(),
+      isHabit: z.boolean().optional()
     });
 
     const body = UpdateTaskSchema.parse(request.body);
@@ -301,7 +304,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
                 SELECT 
                     id, title, description, completed, priority, 
                     category_id as categoryId, parent_id as parentId, 
-                    position, depth, due_date as dueDate, recurrence,
+                    position, depth, due_date as dueDate, recurrence, is_habit as isHabit,
                     pending_parent_completion as pendingParentCompletion
                 FROM tasks WHERE parent_id = ?
             `).all(parentId) as ITask[];
@@ -330,7 +333,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
             SELECT 
                 id, title, description, completed, priority, 
                 category_id as categoryId, parent_id as parentId, 
-                position, depth, due_date as dueDate, recurrence,
+                position, depth, due_date as dueDate, recurrence, is_habit as isHabit,
                 pending_parent_completion as pendingParentCompletion
             FROM tasks WHERE id = ?
         `).get(id) as ITask;
@@ -351,6 +354,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
         if (body.categoryId !== undefined) { fields.push('category_id = @categoryId'); values.categoryId = body.categoryId; }
         if (body.dueDate !== undefined) { fields.push('due_date = @dueDate'); values.dueDate = body.dueDate; }
         if (body.recurrence !== undefined) { fields.push('recurrence = @recurrence'); values.recurrence = body.recurrence; }
+        if (body.isHabit !== undefined) { fields.push('is_habit = @isHabit'); values.isHabit = body.isHabit ? 1 : 0; }
 
         fields.push('updated_at = CURRENT_TIMESTAMP');
 
@@ -423,7 +427,7 @@ export default async function tasksRoutes(fastify: FastifyInstance) {
       SELECT 
         id, title, description, completed, priority, 
         category_id as categoryId, parent_id as parentId, 
-        position, depth, due_date as dueDate, recurrence,
+        position, depth, due_date as dueDate, recurrence, is_habit as isHabit,
         pending_parent_completion as pendingParentCompletion,
         created_at as createdAt, updated_at as updatedAt 
       FROM tasks WHERE id = ?

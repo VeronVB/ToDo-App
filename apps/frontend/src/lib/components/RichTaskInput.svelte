@@ -76,11 +76,17 @@
         return `<span class="${colorClass} rounded-sm font-medium">${match}</span>`;
     });
 
-    // 3. Tagi #
-    escaped = escaped.replace(REGEX.tag, '<span class="text-purple-600 bg-purple-100 dark:text-purple-300 dark:bg-purple-900/50 rounded-sm font-medium">$&</span>');
+    // 3. Tagi # (special colors for habit/nawyk)
+    escaped = escaped.replace(REGEX.tag, (match) => {
+        const tag = match.toLowerCase();
+        if (tag === '#habit' || tag === '#nawyk') {
+            return `<span class="text-orange-600 bg-orange-100 dark:text-orange-300 dark:bg-orange-900/50 rounded-sm font-medium">${match}</span>`;
+        }
+        return `<span class="text-purple-600 bg-purple-100 dark:text-purple-300 dark:bg-purple-900/50 rounded-sm font-medium">${match}</span>`;
+    });
 
     // 4. Daty
-    escaped = escaped.replace(dateRegex, '<span class="text-green-600 bg-green-100 dark:text-green-300 dark:bg-green-900/50 rounded-sm font-medium">$&</span>');
+    escaped = escaped.replace(dateRegex, (match) => `<span class="text-green-600 bg-green-100 dark:text-green-300 dark:bg-green-900/50 rounded-sm font-medium">${match}</span>`);
 
     // Obsługa nowej linii
     return escaped.replace(/\n/g, '<br>');

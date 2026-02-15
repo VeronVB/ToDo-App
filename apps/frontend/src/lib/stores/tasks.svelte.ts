@@ -1,5 +1,6 @@
 import type { ITask } from 'shared';
 import * as api from '$lib/api/client';
+import { habitsStore } from './habits.svelte';
 
 function findPendingTasks(nodes: ITask[], result: ITask[] = []): ITask[] {
 	for (const node of nodes) {
@@ -51,6 +52,12 @@ class TaskStore {
 			} else {
 				this.tasks.push(newTask);
 			}
+			
+			// Refresh habits if this was a habit
+			if ((task as any).isHabit) {
+				await habitsStore.fetchHabits();
+				await habitsStore.fetchOverview();
+			}
 		} catch (err: any) {
 			this.error = err.message;
 		}
@@ -62,7 +69,12 @@ class TaskStore {
 
 		try {
 			await api.updateTask(id, updates);
-			// Optionally update with server response to ensure sync
+			
+			// Refresh habits if isHabit was set
+			if ((updates as any).isHabit) {
+				await habitsStore.fetchHabits();
+				await habitsStore.fetchOverview();
+			}
 		} catch (err: any) {
 			this.error = err.message;
 			// Revert on error? For prototype, just show error

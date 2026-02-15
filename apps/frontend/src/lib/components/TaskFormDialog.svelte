@@ -34,6 +34,7 @@
   let category = $state('');
   let dueDate = $state<DateValue | undefined>(undefined);
   let recurrence = $state('none');
+  let isHabit = $state(false);
   let hintIndex = $state(0);
   let tempNewProjectName = $state(''); 
 
@@ -119,8 +120,19 @@
 
       // 0. Parse Tags (#Tag)
       const tagMatches = text.matchAll(/#([\w\p{L}]+)/gu);
+      let hasHabitTag = false;
       for (const match of tagMatches) {
-          parsedTags.push(match[1]);
+          const tagName = match[1].toLowerCase();
+          if (tagName === 'habit' || tagName === 'nawyk') {
+              hasHabitTag = true;
+          } else {
+              parsedTags.push(match[1]);
+          }
+      }
+      
+      // Return habit flag via parsedTags special marker
+      if (hasHabitTag) {
+          parsedTags.push('__IS_HABIT__');
       }
 
       // 1. Parse Project (@Project)
@@ -233,7 +245,13 @@
       let finalDueDate = dueDate;
       let finalPriority = priority;
       let finalCategory = category;
-      let finalTags = nlp.tags;
+      let finalIsHabit = isHabit;
+      let finalTags = nlp.tags.filter(t => t !== '__IS_HABIT__');
+      
+      // Check for habit tag
+      if (nlp.tags.includes('__IS_HABIT__')) {
+          finalIsHabit = true;
+      }
 
       // Create project if needed
       if (nlp.newProjectName && !finalCategory) {
@@ -264,7 +282,8 @@
           dueDate: finalDueDate ? finalDueDate.toString() : undefined,
           recurrence,
           parentId: uiStore.parentForNewTask ?? undefined,
-          tags: finalTags
+          tags: finalTags,
+          isHabit: finalIsHabit
       };
 
       console.log('[DEBUG] TaskFormDialog: Submitting task data:', taskData);

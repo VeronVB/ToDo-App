@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { Search, HelpCircle, Menu, Settings } from '@lucide/svelte';
+  import { Search, HelpCircle, Menu, Settings, Flame } from '@lucide/svelte';
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { uiStore } from '$lib/stores/ui.svelte';
   import { t } from 'svelte-i18n';
+  import { appStore } from '$lib/stores/app.svelte';
 
   interface Props {
     onMenuClick: () => void;
@@ -57,6 +58,12 @@
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="end" class="w-56">
           <DropdownMenu.Label>{$t('menu.quick_menu')}</DropdownMenu.Label>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item onclick={() => (appStore as any).setView('habits')}>
+            <Flame class="mr-2 h-4 w-4 text-orange-500" />
+            {$t('sidebar.habits')}
+            <span class="ml-auto text-xs opacity-60">#{$t('habits.tag')}</span>
+          </DropdownMenu.Item>
           <DropdownMenu.Separator />
           <DropdownMenu.Item onclick={() => uiStore.openCheatsheet()}>{$t('menu.keyboard_shortcuts')}</DropdownMenu.Item>
           <DropdownMenu.Item onclick={() => uiStore.openSettings()}>{$t('menu.settings')}</DropdownMenu.Item>

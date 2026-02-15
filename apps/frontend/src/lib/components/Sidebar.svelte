@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Inbox, Calendar, Archive, CheckSquare, Folder, Plus, Pencil, Hash } from '@lucide/svelte';
+  import { Inbox, Calendar, Archive, CheckSquare, Folder, Plus, Pencil, Hash, Flame } from '@lucide/svelte';
   import { Button } from '$lib/components/ui/button';
   import { ScrollArea } from '$lib/components/ui/scroll-area';
   import { Separator } from '$lib/components/ui/separator';
@@ -8,8 +8,10 @@
   import { tasksStore } from '$lib/stores/tasks.svelte';
   import { projectsStore } from '$lib/stores/projects.svelte';
   import { tagsStore } from '$lib/stores/tags.svelte';
+  import { habitsStore } from '$lib/stores/habits.svelte';
   import { uiStore } from '$lib/stores/ui.svelte';
   import { t } from 'svelte-i18n';
+  import HabitStreakWidget from './HabitStreakWidget.svelte';
 
   // Helper to check dates
   const isToday = (dateStr?: string) => {
@@ -36,6 +38,10 @@
     { id: 'today', name: $t('sidebar.today'), icon: CheckSquare, count: todayCount },
     { id: 'upcoming', name: $t('sidebar.upcoming'), icon: Calendar, count: upcomingCount },
   ]);
+
+  $effect(() => {
+    habitsStore.fetchHabits();
+  });
 
 </script>
 
@@ -128,11 +134,13 @@
       </ScrollArea>
     </div>
   </div>
-
-  <div class="p-4 border-t shrink-0">
-     <Button variant="outline" class="w-full justify-start" onclick={() => uiStore.openAddProject()}>
-        <Plus class="mr-2 h-4 w-4" />
-        {$t('app.new_list')}
-     </Button>
+  <div class="border-t p-2 shrink-0">
+    <Button variant="outline" class="w-full justify-start" onclick={() => uiStore.openAddProject()}>
+       <Plus class="mr-2 h-4 w-4" />
+       {$t('app.new_list')}
+    </Button>
+  </div>
+  <div class="border-t p-2 shrink-0">
+    <HabitStreakWidget />
   </div>
 </div>

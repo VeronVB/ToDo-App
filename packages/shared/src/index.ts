@@ -15,6 +15,7 @@ export interface ITask {
   dueDate?: string;
   recurrence?: 'none' | 'daily' | 'weekly' | 'monthly'; // Added recurrence
   pendingParentCompletion?: boolean;
+  isHabit?: boolean;
   createdAt: string;
   updatedAt: string;
   
@@ -94,6 +95,7 @@ export interface ITimeEntry {
   duration?: number; // seconds
   notes?: string;
   createdAt: string;
+  isRunning?: boolean;
 }
 
 export interface IApiToken {

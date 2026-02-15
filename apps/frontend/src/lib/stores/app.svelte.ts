@@ -1,4 +1,4 @@
-export type ViewType = 'inbox' | 'today' | 'upcoming' | 'anytime' | 'someday' | 'logbook' | 'project' | 'tag';
+export type ViewType = 'inbox' | 'today' | 'upcoming' | 'anytime' | 'someday' | 'logbook' | 'habits' | 'project' | 'tag';
 
 class AppStore {
 	currentView = $state<ViewType>('today');

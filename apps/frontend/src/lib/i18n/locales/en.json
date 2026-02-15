@@ -6,23 +6,104 @@
     "edit_project": "Edit Project",
     "new_project": "New Project",
     "project_name": "Project Name",
+    "project_placeholder": "e.g. Work",
     "edit": "Edit",
     "delete": "Delete",
     "save": "Save",
     "cancel": "Cancel",
+    "back": "Back",
     "confirm_delete_project": "Are you sure you want to delete this project and all its tasks?"
   },
-  "sidebar": {
+  "settings_tabs": {
+    "general": "General",
+    "appearance": "Appearance"
+  },
+  "settings_general": {
+    "site_name": "Site Name",
+    "save_changes": "Save Changes"
+  },
+  "settings_appearance": {
+    "color_scheme": "Color Scheme",
+    "layout_density": "Layout Density",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "schemes": {
+      "default": "Default",
+      "windows": "Windows",
+      "mac": "Mac",
+      "linux": "Linux"
+    },
+    "colors": {
+      "neutral": "Neutral",
+      "red": "Red",
+      "orange": "Orange",
+      "green": "Green",
+      "blue": "Blue",
+      "yellow": "Yellow",
+      "violet": "Violet"
+    },
+    "layouts": {
+      "compact": "Compact",
+      "comfortable": "Comfortable",
+      "spacious": "Spacious"
+    }
+  },
+  "task_form": {
+    "new_task": "New Task",
+    "edit_task": "Edit Task",
+    "title": "Title",
+    "title_placeholder": "Task title",
+    "description": "Description",
+    "description_placeholder": "Optional description",
+    "priority": "Priority",
+    "priorities": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "is_habit": "This is a habit",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "cheatsheet": {
+    "input": "Input:",
+    "parsed": "Parsed:"
+  },
+"sidebar": {
     "inbox": "Inbox",
     "today": "Today",
     "upcoming": "Upcoming",
     "anytime": "Anytime",
     "someday": "Someday",
     "logbook": "Logbook",
+    "habits": "Habits",
     "projects": "PROJECTS"
+  },
+  "habits": {
+    "title": "Habits",
+    "tag": "habbit",
+    "no_habits": "No habits yet",
+    "create_first": "Create a habit from your tasks to start tracking!",
+    "day_streak": "day streak",
+    "days": "days",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "this_week": "This week",
+    "this_year": "This year",
+    "active_habits": "Active Habits",
+    "total": "Total",
+    "best_streak": "Best streak",
+    "last_completed": "Last",
+    "complete": "Complete",
+    "done": "Done",
+    "go_to_tasks": "Go to Tasks"
   },
   "tasks": {
     "add_task": "Add Task",
+    "add_subtask": "Add Subtask",
     "no_tasks": "No tasks here. Enjoy your day!",
     "all_done": "All done!",
     "empty": {
@@ -48,6 +129,7 @@
         "description": "Generate API tokens for external access.",
         "generate": "Generate Token",
         "token_name": "Token Name",
+        "token_placeholder": "e.g. Mobile App",
         "generated_title": "Token Generated",
         "generated_desc": "Copy this token now. You won't see it again.",
         "no_tokens": "No active tokens.",
@@ -57,6 +139,10 @@
         "created_at": "Created:"
     },
     "language": "Language",
+    "languages": {
+      "en": "English",
+      "pl": "Polish"
+    },
     "confirm_deletions": "Confirm deletions",
     "theme": "Theme",
     "themes": {
@@ -183,5 +269,17 @@
       "type_to_search": "Type to search...",
       "searching": "Searching...",
       "tasks": "Tasks"
+  },
+  "timer": {
+    "start_focus": "Start Focus",
+    "focus": "Focus",
+    "short_break": "Short Break",
+    "long_break": "Long Break",
+    "ready": "Ready",
+    "pause": "Pause",
+    "resume": "Resume",
+    "stop": "Stop",
+    "skip": "Skip to next",
+    "session": "Session"
   }
 }

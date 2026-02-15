@@ -77,35 +77,35 @@
              </div>
           </Tabs.Content>
           
-          <Tabs.Content value="quick-add" class="p-6 m-0 space-y-6">
-             <div class="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-lg border border-blue-100 dark:border-blue-900 text-blue-900 dark:text-blue-100 text-sm">
-                 <strong>💡 {$t('help.quick_add.title')}</strong>
-                 <p class="mt-1 opacity-90">{$t('help.quick_add.description')}</p>
-             </div>
-             
-             <div class="space-y-4">
-                 <div class="rounded-lg border p-4 space-y-2">
-                     <div class="text-sm text-muted-foreground">Input:</div>
-                     <div class="font-mono text-sm bg-muted/50 p-2 rounded">Buy milk tomorrow</div>
-                     <div class="text-sm text-muted-foreground mt-2">Parsed:</div>
-                     <div class="flex gap-2">
-                         <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold text-foreground">Buy milk</span>
-                         <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold bg-blue-50 text-blue-700 border-blue-200">📅 tomorrow</span>
-                     </div>
-                 </div>
-                 
-                 <div class="rounded-lg border p-4 space-y-2">
-                     <div class="text-sm text-muted-foreground">Input:</div>
-                     <div class="font-mono text-sm bg-muted/50 p-2 rounded">Review PR @Work !high</div>
-                     <div class="text-sm text-muted-foreground mt-2">Parsed:</div>
-                     <div class="flex gap-2">
-                         <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold text-foreground">Review PR</span>
-                         <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold bg-orange-50 text-orange-700 border-orange-200">📁 Work</span>
-                         <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold bg-red-50 text-red-700 border-red-200">🔴 high</span>
-                     </div>
-                 </div>
-             </div>
-          </Tabs.Content>
+<Tabs.Content value="quick-add" class="p-6 m-0 space-y-6">
+              <div class="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-lg border border-blue-100 dark:border-blue-900 text-blue-900 dark:text-blue-100 text-sm">
+                  <strong>💡 {$t('help.quick_add.title')}</strong>
+                  <p class="mt-1 opacity-90">{$t('help.quick_add.description')}</p>
+              </div>
+              
+              <div class="space-y-4">
+                  <div class="rounded-lg border p-4 space-y-2">
+                      <div class="text-sm text-muted-foreground">{$t('cheatsheet.input')}</div>
+                      <div class="font-mono text-sm bg-muted/50 p-2 rounded">Buy milk tomorrow</div>
+                      <div class="text-sm text-muted-foreground mt-2">{$t('cheatsheet.parsed')}</div>
+                      <div class="flex gap-2">
+                          <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold text-foreground">Buy milk</span>
+                          <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold bg-blue-50 text-blue-700 border-blue-200">📅 tomorrow</span>
+                      </div>
+                  </div>
+                  
+                  <div class="rounded-lg border p-4 space-y-2">
+                      <div class="text-sm text-muted-foreground">{$t('cheatsheet.input')}</div>
+                      <div class="font-mono text-sm bg-muted/50 p-2 rounded">Review PR @Work !high</div>
+                      <div class="text-sm text-muted-foreground mt-2">{$t('cheatsheet.parsed')}</div>
+                      <div class="flex gap-2">
+                          <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold text-foreground">Review PR</span>
+                          <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold bg-orange-50 text-orange-700 border-orange-200">📁 Work</span>
+                          <span class="inline-flex items-center rounded-md border px-2 py-0.5 text-xs font-semibold bg-red-50 text-red-700 border-red-200">🔴 high</span>
+                      </div>
+                  </div>
+              </div>
+           </Tabs.Content>
           
           <Tabs.Content value="features" class="p-6 m-0 space-y-4">
              <div class="flex gap-4 p-4 rounded-lg border">

@@ -1,16 +1,16 @@
 <script lang="ts">
   import { Checkbox } from '$lib/components/ui/checkbox';
   import { Badge } from '$lib/components/ui/badge';
-  import { Calendar, MoreHorizontal, Edit, Trash2, Plus, GripVertical, ChevronRight, ChevronDown } from '@lucide/svelte';
+  import { Calendar, MoreHorizontal, Edit, Trash2, Plus, GripVertical, ChevronRight, ChevronDown, Timer } from '@lucide/svelte';
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { t } from 'svelte-i18n';
   import { projectsStore } from '$lib/stores/projects.svelte';
   import { uiStore } from '$lib/stores/ui.svelte';
+  import { timerStore } from '$lib/stores/timer.svelte';
   import * as api from '$lib/api/client';
   import TaskItem from './TaskItem.svelte';
   import { cn } from '$lib/utils';
-  
   interface Task {
     id: number;
     title: string;
@@ -40,9 +40,10 @@
         onDrop: (id: number) => void;
     };
     dropIndicator?: { taskId: number; position: 'before' | 'after' | 'child' } | null;
+    isLogbook?: boolean;
   }
 
-  let { task, onToggle, onDelete, onEdit, draggable = false, dndHandlers, dropIndicator }: Props = $props();
+  let { task, onToggle, onDelete, onEdit, draggable = false, dndHandlers, dropIndicator, isLogbook = false }: Props = $props();
 
   let isExpanded = $state(false); // Description expansion
   let areChildrenExpanded = $state(true); // Subtasks expansion
@@ -94,6 +95,27 @@
 
   function handleAddSubtask() {
     uiStore.openAdd(task.id);
+  }
+
+  function handleStartFocus() {
+    if (timerStore.isRunning) return;
+    
+    const taskData = {
+      id: task.id,
+      title: task.title,
+      description: task.description,
+      completed: task.completed,
+      priority: task.priority,
+      dueDate: task.dueDate,
+      categoryId: task.categoryId,
+      children: task.children,
+      tags: task.tags,
+      position: task.position || 0,
+      depth: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    timerStore.startTimer(taskData as any);
   }
 
   // --- Drag Events ---
@@ -221,8 +243,20 @@
           {/if}
         </div>
 
-        <!-- Actions -->
+        <!-- Actions (hidden in logbook) -->
         <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity" onclick={(e) => e.stopPropagation()}>
+            {#if !isLogbook}
+            {#if !timerStore.isRunning}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              class="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-500/10" 
+              onclick={handleStartFocus} 
+              title={$t('timer.start_focus')}
+            >
+                <Timer class="h-4 w-4" />
+            </Button>
+            {/if}
             <Button variant="ghost" size="icon" class="h-8 w-8" onclick={() => onEdit(task.id)}>
                 <Edit class="h-4 w-4 text-muted-foreground" />
             </Button>
@@ -244,6 +278,11 @@
                     <DropdownMenu.Item onclick={() => onDelete(task.id)} class="text-destructive">{$t('app.delete')}</DropdownMenu.Item>
                 </DropdownMenu.Content>
             </DropdownMenu.Root>
+            {:else}
+            <Button variant="ghost" size="icon" class="h-8 w-8 text-destructive hover:text-destructive" onclick={() => onDelete(task.id)} title={$t('app.delete')}>
+                <Trash2 class="h-4 w-4" />
+            </Button>
+            {/if}
         </div>
       </div>
     </div>

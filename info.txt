@@ -1,0 +1,25 @@
+Utworzyłem wszystkie pliki:
+
+| Plik | Opis |
+|------|------|
+| `Dockerfile` | Development - uruchamia `pnpm dev` (tsx watch + vite) |
+| `Dockerfile.prod` | Production - buduje, nginx serwuje frontend, backend na :3000 |
+| `docker-compose.yml` | Z profiles: `dev` i `prod` |
+| `.dockerignore` | Wyklucza node_modules, .git, itp. |
+
+### Uruchomienie
+
+**Development:**
+```bash
+docker-compose --profile dev up --build
+```
+- Backend: http://localhost:3000
+- Frontend: http://localhost:5173
+
+**Production:**
+```bash
+docker-compose --profile prod up --build
+```
+- Aplikacja: http://localhost:80
+
+Uwaga: Dla produkcji musisz ustawić `JWT_SECRET` w `.env` przed buildem.

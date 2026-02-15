@@ -59,6 +59,9 @@ importers:
       svelte-i18n:
         specifier: ^4.0.1
         version: 4.0.1(svelte@5.49.2)
+      svelte5-heatmap:
+        specifier: ^0.0.4
+        version: 0.0.4(svelte@5.49.2)
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
@@ -1940,6 +1943,11 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
 
+  svelte5-heatmap@0.0.4:
+    resolution: {integrity: sha512-GwNX74qTz/zgtB5IrI+didnPf9fY+prQBxYaGVoNkTy1tA1lQxOUAJDq5tu+nVyEBNTNCcnIo7nLrll8Zlb0tQ==}
+    peerDependencies:
+      svelte: ^5.0.0
+
   svelte@5.49.2:
     resolution: {integrity: sha512-PYLwnngYzyhKzqDlGVlCH4z+NVI8mC0/bTv15vw25CcdOhxENsOHIbQ36oj5DIf3oBazM+STbCAvaskpxtBmWA==}
     engines: {node: '>=18'}
@@ -3795,6 +3803,10 @@ snapshots:
       clsx: 2.1.1
       runed: 0.23.4(svelte@5.49.2)
       style-to-object: 1.0.14
+      svelte: 5.49.2
+
+  svelte5-heatmap@0.0.4(svelte@5.49.2):
+    dependencies:
       svelte: 5.49.2
 
   svelte@5.49.2:

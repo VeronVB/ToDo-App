@@ -6,11 +6,71 @@
     "edit_project": "Edytuj Projekt",
     "new_project": "Nowy Projekt",
     "project_name": "Nazwa Projektu",
+    "project_placeholder": "np. Praca",
     "edit": "Edytuj",
     "delete": "Usuń",
     "save": "Zapisz",
     "cancel": "Anuluj",
+    "back": "Wstecz",
     "confirm_delete_project": "Czy na pewno chcesz usunąć ten projekt i wszystkie jego zadania?"
+  },
+  "settings_tabs": {
+    "general": "Ogólne",
+    "appearance": "Wygląd"
+  },
+  "settings_general": {
+    "site_name": "Nazwa Strony",
+    "save_changes": "Zapisz Zmiany"
+  },
+  "settings_appearance": {
+    "color_scheme": "Schemat Kolorów",
+    "layout_density": "Gęstość Układu",
+    "themes": {
+      "light": "Jasny",
+      "dark": "Ciemny",
+      "system": "Systemowy"
+    },
+    "schemes": {
+      "default": "Domyślny",
+      "windows": "Windows",
+      "mac": "Mac",
+      "linux": "Linux"
+    },
+    "colors": {
+      "neutral": "Neutralny",
+      "red": "Czerwony",
+      "orange": "Pomarańczowy",
+      "green": "Zielony",
+      "blue": "Niebieski",
+      "yellow": "Żółty",
+      "violet": "Fioletowy"
+    },
+    "layouts": {
+      "compact": "Kompaktowy",
+      "comfortable": "Wygodny",
+      "spacious": "Luźny"
+    }
+  },
+  "task_form": {
+    "new_task": "Nowe Zadanie",
+    "edit_task": "Edytuj Zadanie",
+    "title": "Tytuł",
+    "title_placeholder": "Tytuł zadania",
+    "description": "Opis",
+    "description_placeholder": "Opcjonalny opis",
+    "priority": "Priorytet",
+    "priorities": {
+      "low": "Niski",
+      "medium": "Średni",
+      "high": "Wysoki"
+    },
+    "is_habit": "To jest nawyk",
+    "cancel": "Anuluj",
+    "save": "Zapisz"
+  },
+  "cheatsheet": {
+    "input": "Wejście:",
+    "parsed": "Przetworzone:"
   },
   "sidebar": {
     "inbox": "Skrzynka",
@@ -19,10 +79,31 @@
     "anytime": "W każdej chwili",
     "someday": "Kiedyś",
     "logbook": "Dziennik",
+    "habits": "Nawyki",
     "projects": "PROJEKTY"
+  },
+  "habits": {
+    "title": "Nawyki",
+    "tag": "nawyk",
+    "no_habits": "Brak nawyków",
+    "create_first": "Utwórz nawyk ze swoich zadań, aby zacząć śledzić postępy!",
+    "day_streak": "dni z rzędu",
+    "days": "dni",
+    "today": "Dzisiaj",
+    "yesterday": "Wczoraj",
+    "this_week": "Ten tydzień",
+    "this_year": "Ten rok",
+    "active_habits": "Aktywne nawyki",
+    "total": "Łącznie",
+    "best_streak": "Najlepszy streak",
+    "last_completed": "Ostatnio",
+    "complete": "Zrobione",
+    "done": "Gotowe",
+    "go_to_tasks": "Przejdź do Zadań"
   },
   "tasks": {
     "add_task": "Dodaj Zadanie",
+    "add_subtask": "Dodaj Podzadanie",
     "no_tasks": "Brak zadań. Ciesz się dniem!",
     "all_done": "Wszystko zrobione!",
     "empty": {
@@ -48,6 +129,7 @@
         "description": "Generuj tokeny API dla zewnętrznego dostępu.",
         "generate": "Generuj Token",
         "token_name": "Nazwa Tokenu",
+        "token_placeholder": "np. Aplikacja Mobilna",
         "generated_title": "Token Wygenerowany",
         "generated_desc": "Skopiuj token teraz. Nie zobaczysz go ponownie.",
         "no_tokens": "Brak aktywnych tokenów.",
@@ -57,6 +139,10 @@
         "created_at": "Utworzono:"
     },
     "language": "Język",
+    "languages": {
+      "en": "Angielski",
+      "pl": "Polski"
+    },
     "confirm_deletions": "Potwierdzaj usuwanie",
     "theme": "Motyw",
     "themes": {
@@ -183,5 +269,17 @@
       "type_to_search": "Zacznij pisać...",
       "searching": "Szukanie...",
       "tasks": "Zadania"
+  },
+  "timer": {
+    "start_focus": "Rozpocznij Fokus",
+    "focus": "Fokus",
+    "short_break": "Krótka Przerwa",
+    "long_break": "Długa Przerwa",
+    "ready": "Gotowy",
+    "pause": "Pauza",
+    "resume": "Wznów",
+    "stop": "Zatrzymaj",
+    "skip": "Pomiń do następnej",
+    "session": "Sesja"
   }
 }

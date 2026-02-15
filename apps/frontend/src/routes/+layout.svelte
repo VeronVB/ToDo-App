@@ -11,6 +11,7 @@
   import SettingsDialog from '$lib/components/SettingsDialog.svelte';
   import ProjectDialog from '$lib/components/ProjectDialog.svelte';
   import SearchDialog from '$lib/components/SearchDialog.svelte';
+  import PomodoroTimer from '$lib/components/PomodoroTimer.svelte';
   import { setupI18n } from '$lib/i18n';
   import { isLoading } from 'svelte-i18n';
   import { browser } from '$app/environment';
@@ -152,4 +153,6 @@
     open={uiStore.isSearchOpen}
     onOpenChange={(v) => uiStore.isSearchOpen = v}
   />
+
+  <PomodoroTimer />
 {/if}

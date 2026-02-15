@@ -69,7 +69,7 @@
     <div class="grid gap-4 py-4">
       <div class="grid gap-2">
         <Label for="name">{$t('app.project_name')}</Label>
-        <Input id="name" bind:value={name} placeholder="e.g. Work" autofocus />
+        <Input id="name" bind:value={name} placeholder={$t('app.project_placeholder')} autofocus />
       </div>
     </div>
     
