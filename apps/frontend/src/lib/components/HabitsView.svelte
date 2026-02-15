@@ -532,7 +532,7 @@
   {/if}
 </div>
 
-<script context="module" lang="ts">
+<script module lang="ts">
   function getRecentDays(count: number): string[] {
     const days: string[] = [];
     for (let i = count - 1; i >= 0; i--) {
